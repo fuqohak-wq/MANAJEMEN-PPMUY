@@ -59,7 +59,7 @@
 
     <script>
         // =========================================================================
-        // PENTING: Ganti URL di bawah ini dengan URL Web App (/exec) Anda!
+        // URL EXEC WEB APP GOOGLE SCRIPT ANDA
         // =========================================================================
         const API_URL = "https://script.google.com/macros/s/AKfycbwR-Ml0M6mCXj2yc_E0Ihll3V3HIDlithCuMYvIsxSrtZdhVDJNMFZ5WKb657o8di5x/exec";
         
@@ -130,15 +130,16 @@
             setTimeout(() => { f.classList.remove('opacity-100'); f.classList.add('opacity-0'); }, 80);
 
             const realCanvas = document.getElementById('canvas-capture');
-            realCanvas.width = video.videoWidth || 640; 
-            realCanvas.height = video.videoHeight || 480;
-            realCanvas.getContext('2d').drawImage(video, 0, 0, realCanvas.width, realCanvas.height);
             
-            // Mengambil base64 murni
-            const base64Image = realCanvas.toDataURL('image/jpeg', 0.5).split(',')[1];
+            // DOWNSIZE: Resolusi diperkecil ke 320x240 agar lolos batas ukuran Google Script
+            realCanvas.width = 320; 
+            realCanvas.height = 240;
+            realCanvas.getContext('2d').drawImage(video, 0, 0, 320, 240);
+            
+            // KOMPRESI: Kualitas diturunkan ke 30% (0.3) agar file teks base64 sangat ringan
+            const base64Image = realCanvas.toDataURL('image/jpeg', 0.3).split(',')[1];
             const waktu = document.getElementById('waktu-shalat').value;
 
-            // Mengirim menggunakan Form Payload agar tidak diblokir CORS browser
             const formPayload = new URLSearchParams();
             formPayload.append('imageBlob', base64Image);
             formPayload.append('waktuShalat', waktu);
@@ -166,7 +167,7 @@
                     tampilkanPesanGagal(r.message || "Wajah tidak cocok / Tidak Terdaftar.");
                 }
             } catch (e) {
-                tampilkanPesanGagal("Server Google Menolak Akses / Terjadi Error.");
+                tampilkanPesanGagal("Koneksi Google Script Terputus.");
                 console.error(e);
             }
         }
