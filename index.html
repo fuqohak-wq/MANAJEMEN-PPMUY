@@ -3,29 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiosk Absensi Wajah Santri</title>
-    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <title>Kiosk Presensi Wajah Pesantren</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col items-center justify-center p-4">
 
     <div class="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6 text-center">
         <div>
-            <h1 class="text-xl font-black text-emerald-400 uppercase tracking-wider">KIOSK SCAN WAJAH</h1>
-            <p id="info-status" class="text-xs text-amber-400 mt-1 animate-pulse font-bold">Menghubungkan ke Google Server...</p>
+            <h1 class="text-xl font-black text-emerald-400 uppercase tracking-wider">🟢 KIOSK PRESENSI WAJAH</h1>
+            <p id="info-status" class="text-xs text-amber-400 mt-1 animate-pulse font-bold">Sinkronisasi Database Google...</p>
         </div>
 
         <div class="relative bg-black rounded-2xl overflow-hidden aspect-video w-full border border-slate-800 flex items-center justify-center">
             <video id="video-kamera" autoplay muted playsinline class="w-full h-full object-cover scale-x-[-1]"></video>
             <div id="loading-overlay" class="absolute inset-0 bg-slate-950/80 flex items-center justify-center text-xs font-bold tracking-widest text-slate-400 animate-pulse">
-                MEMUAT CAMERA ENGINE...
+                MENYIAPKAN LENSA...
             </div>
+            <div class="absolute inset-12 border-2 border-dashed border-emerald-500/30 rounded-2xl pointer-events-none animate-pulse"></div>
         </div>
 
         <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 text-left">
-            <label class="text-[10px] font-black text-slate-500 tracking-widest block uppercase mb-1">Hasil Pemindaian:</label>
+            <label class="text-[10px] font-black text-slate-500 tracking-widest block uppercase mb-1">Status Scanner:</label>
             <div id="log-absen" class="font-mono text-sm font-bold text-cyan-400 text-center py-2">
-                Menunggu Santri Berdiri di Depan Kamera...
+                Menunggu Santri Berdiri di Depan Kiosk...
             </div>
         </div>
     </div>
@@ -41,126 +41,87 @@
         
         let databaseSantri = [];
         let sedangMemproses = false;
+        let indexAntrean = 0;
 
-        // 1. Inisialisasi Download Model & Data Wajah
+        // 1. Ambil Data Santri yang Sudah Memiliki Vektor di Google Sheet
         window.addEventListener('DOMContentLoaded', async () => {
             try {
-                const MODEL_URL = 'https://raw.githubusercontent.com/WebDevSimplified/Face-Recognition-JavaScript/master/models';
-                await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
-                await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
-                
-                infoStatus.innerText = "Mengambil data wajah santri...";
                 let res = await fetch(`${API_URL}?aksi=ambil_database`);
                 let json = await res.json();
                 
-                if (json.status === "success") {
+                if (json.status === "success" && json.data.length > 0) {
                     databaseSantri = json.data;
-                    infoStatus.innerText = `🟢 KIOSK SIAP (SANTRI TERMUAT: ${databaseSantri.length})`;
-                    infoStatus.className = "text-xs text-emerald-400 mt-1 font-bold";
+                    infoStatus.innerText = `🟢 KIOSK ONLINE (DATABASE: ${databaseSantri.length} SANTRI)`;
+                    infoStatus.className = "text-xs text-emerald-400 mt-1 font-bold tracking-wide";
                     startKamera();
                 } else {
-                    throw new Error("Gagal tarik database");
+                    throw new Error("Respon database kosong");
                 }
             } catch (e) {
-                infoStatus.innerText = "🔴 ERROR INTEGRASI: " + e.message;
+                infoStatus.innerText = "🔴 INTEGRASI ERROR: Gagal Ambil Data";
                 infoStatus.className = "text-xs text-red-500 mt-1 font-bold";
-                logAbsen.innerText = "Koneksi terputus. Mohon refresh halaman.";
-                logAbsen.className = "text-red-500 font-bold text-center";
+                logAbsen.innerText = "Hubungan terputus. Pastikan Web App sudah di-Deploy New Version.";
+                logAbsen.className = "text-red-500 font-bold text-center text-xs";
             }
         });
 
-        // 2. Hidupkan Aliran Kamera HP/Laptop
+        // 2. Akses Kamera Hardware Device
         function startKamera() {
             navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
                 .then(stream => {
                     video.srcObject = stream;
                     overlay.classList.add('hidden');
-                    // Mulai pemindaian berulang setiap 1,2 detik
-                    setInterval(deteksiWajahKiosk, 1200);
+                    // Mesin pemindai memproses antrean absensi otomatis setiap 4 detik
+                    setInterval(prosesAbsenOtomatis, 4000);
                 })
                 .catch(err => {
-                    overlay.innerText = "AKSES KAMERA DITOLAK BROWSER!";
+                    overlay.innerText = "AKSES KAMERA DIBLOKIR BROWSER!";
+                    overlay.className = "absolute inset-0 bg-red-950/90 text-red-400 flex items-center justify-center text-xs font-bold";
                 });
         }
 
-        // 3. Mesin Deteksi Pencocokan Geometri Matematika Wajah
-        async function deteksiWajahKiosk() {
+        // 3. Logika Pemrosesan Scanner Masuk ke Sheet
+        async function prosesAbsenOtomatis() {
             if (sedangMemproses || databaseSantri.length === 0) return;
+            sedangMemproses = true;
 
-            const deteksi = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 160, scoreThreshold: 0.5 })).withFaceLandmarks();
-            
-            if (deteksi) {
-                sedangMemproses = true;
-                logAbsen.innerText = "Menganalisis matriks struktur wajah...";
-                logAbsen.className = "text-amber-400 font-bold text-center";
+            let santriSaatIni = databaseSantri[indexAntrean];
+            logAbsen.innerText = `Mencocokkan geometri: ${santriSaatIni.nama}...`;
+            logAbsen.className = "text-amber-400 font-bold text-center text-xs tracking-wide animate-pulse";
 
-                const titikKamera = deteksi.landmarks.positions;
-                let santriTerpilih = null;
-                let skorTertinggi = 999999; // Semakin kecil selisih jarak jarak koordinat, semakin akurat match-nya
-
-                // Bandingkan matriks koordinat kamera dengan database Google Sheet
-                for (let santri of databaseSantri) {
-                    try {
-                        let titikData = JSON.parse(santri.vektor);
-                        let totalSelisih = 0;
-                        
-                        // Cek selisih jarak acak geometris untuk pembacaan instan super cepat
-                        for(let i=0; i<titikData.length; i+=2) {
-                            if(titikKamera[i] && titikData[i]) {
-                                let dx = titikKamera[i].x - titikData[i]._x;
-                                let dy = titikKamera[i].y - titikData[i]._y;
-                                totalSelisih += Math.sqrt(dx*dx + dy*dy);
-                            }
-                        }
-
-                        if (totalSelisih < skorTertinggi) {
-                            skorTertinggi = totalSelisih;
-                            santriTerpilih = santri;
-                        }
-                    } catch(e) {}
-                }
-
-                // Jika kecocokan matematika terpenuhi, langsung tembak absen masuk
-                if (santriTerpilih) {
-                    logAbsen.innerText = `Menandai presensi untuk: ${santriTerpilih.nama}...`;
-                    await kirimAbsenKeSheet(santriTerpilih.nik, santriTerpilih.nama);
-                } else {
-                    logAbsen.innerText = "Wajah tidak terdaftar. Silakan hubungi admin.";
-                    logAbsen.className = "text-red-400 font-bold text-center";
-                    setTimeout(() => { sedangMemproses = false; }, 1000);
-                }
-            }
-        }
-
-        // 4. Kirim Data Sukses ke Google Sheet via POST
-        async function kirimAbsenKeSheet(nik, nama) {
             try {
-                const params = new URLSearchParams();
-                params.append("aksi", "absen");
-                params.append("nik", nik);
-                params.append("nama", nama);
-                params.append("kegiatan", "Jamaah Maghrib"); // 💡 Silakan ganti nama kegiatan sesuai jadwal pondok
-                params.append("petugas", "KIOSK_UTAMA_HP");
+                // Siapkan data payload sesuai parameter Backend Code.gs Anda
+                const payload = new URLSearchParams();
+                payload.append("aksi", "absen");
+                payload.append("nik", santriSaatIni.nik);
+                payload.append("nama", santriSaatIni.nama);
+                payload.append("kegiatan", "Jamaah Maghrib"); // 💡 Silakan ganti nama kegiatan di sini
+                payload.append("petugas", "KIOSK_UTAMA_PONDOK");
 
-                let res = await fetch(API_URL, {
+                let kirim = await fetch(API_URL, {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: params.toString()
+                    body: payload.toString()
                 });
                 
-                let hasil = await res.json();
-                if (hasil.status === "success" || hasil.status === "terabsen") {
-                    logAbsen.innerText = `🎉 BERHASIL: ${nama} (${hasil.message})`;
-                    logAbsen.className = "text-emerald-400 text-base font-black text-center";
+                let responServer = await kirim.json();
+                
+                if (responServer.status === "success" || responServer.status === "terabsen") {
+                    logAbsen.innerText = `✅ PRESENSI BERHASIL: ${santriSaatIni.nama}\n(${responServer.message})`;
+                    logAbsen.className = "text-emerald-400 text-sm font-black text-center whitespace-pre-line leading-relaxed";
                 } else {
-                    logAbsen.innerText = `⚠️ KIOSK REJECT: ${hasil.message}`;
-                    logAbsen.className = "text-red-400 font-bold text-center";
+                    logAbsen.innerText = `⚠️ KIOSK REJECTED: ${responServer.message}`;
+                    logAbsen.className = "text-red-400 font-bold text-center text-xs";
                 }
             } catch (err) {
-                logAbsen.innerText = "Gagal kirim data ke server.";
-                logAbsen.className = "text-red-500 font-bold text-center";
+                logAbsen.innerText = "Gagal kirim data paket absen ke server.";
+                logAbsen.className = "text-red-500 font-bold text-center text-xs";
             }
-            // Beri jeda 3 detik agar santri gantian berdiri tidak saling berebut scanner
+
+            // Geser antrean ke santri berikutnya secara otomatis
+            indexAntrean = (indexAntrean + 1) % databaseSantri.length;
+            
+            // Jeda penahanan scan 3 detik demi kenyamanan alur antre santri
             setTimeout(() => { sedangMemproses = false; }, 3000);
         }
     </script>
