@@ -47,7 +47,7 @@
 </head>
 <body class="bright-premium-bg text-slate-800 font-sans min-h-screen flex flex-col justify-between">
 
-    <!-- HEADER NAVIGATION BAR (Biru Royal Pekat & Aksen Kuning Emas Cerah) -->
+    <!-- HEADER NAVIGATION BAR -->
     <header class="w-full bg-indigo-900 border-b-4 border-yellow-400 px-6 py-4 flex justify-between items-center shadow-md">
         <div class="flex items-center gap-4">
             <div class="w-12 h-12 rounded-xl bg-yellow-400 flex items-center justify-center shadow-md animate-bounce">
@@ -58,16 +58,15 @@
                 <span id="badge-role" class="text-[10px] bg-yellow-400 text-indigo-950 px-3 py-0.5 rounded-full font-black tracking-widest border border-white block mt-0.5 w-max shadow-sm">KIAI</span>
             </div>
         </div>
-        <!-- Tombol Keluar Cerah -->
-        <button onclick="prosesLogout()" class="w-11 h-11 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-indigo-950 font-black flex items-center justify-center shadow-md border-2 border-white transition-all cursor-pointer active:scale-95">
+        <button onclick="prosesLogout()" class="w-11 h-11 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-indigo-950 font-black flex items-center justify-center shadow-md border-2 border-white transition-all cursor-pointer">
             <i class="fa-solid fa-right-from-bracket text-lg"></i>
         </button>
     </header>
 
-    <!-- CONTAINER GRID MENU WARNA BIRU & KUNING CERAH -->
+    <!-- CONTAINER GRID MENU UTAMA -->
     <main class="max-w-7xl w-full mx-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-auto">
         
-        <!-- CARD 1: REGISTRASI WAJAH (VARIAN BIRU) -->
+        <!-- CARD 1: REGISTRASI WAJAH SANTRI -->
         <div id="box-registrasi" class="royal-card rounded-[2rem] p-6 flex flex-col justify-between aspect-[1.7/1] group cursor-pointer">
             <div class="w-12 h-12 bg-yellow-400 rounded-2xl flex items-center justify-center shadow-md">
                 <i class="fa-solid fa-camera text-indigo-900 text-xl"></i>
@@ -79,19 +78,19 @@
             <a href="daftar-wajah.html" class="text-xs font-black text-yellow-400 group-hover:text-white flex items-center gap-2 uppercase tracking-widest mt-4">BUKA ALAT <i class="fa-solid fa-circle-arrow-right animate-pulse"></i></a>
         </div>
 
-        <!-- CARD 2: ABSENSI KELAS MADRASAH (VARIAN KUNING EMAS) -->
+        <!-- CARD 2: ABSENSI GURU PDF (INI YANG DIUBAH TOTAL UNTUK KIAI) -->
         <div id="box-madrasah" class="gold-card rounded-[2rem] p-6 flex flex-col justify-between aspect-[1.7/1] group cursor-pointer">
             <div class="w-12 h-12 bg-indigo-900 rounded-2xl flex items-center justify-center shadow-md">
-                <i class="fa-solid fa-graduation-cap text-yellow-400 text-xl"></i>
+                <i class="fa-solid fa-user-tie text-yellow-400 text-xl"></i>
             </div>
             <div class="mt-4">
-                <h2 class="text-lg font-black text-indigo-950 tracking-wide uppercase">Absen Madrasah</h2>
-                <p class="text-xs text-indigo-900 font-bold mt-1">Sistem klik nama langsung hilang (Sekolah formal PDF).</p>
+                <h2 class="text-lg font-black text-indigo-950 tracking-wide uppercase">Absen Guru PDF</h2>
+                <p class="text-xs text-indigo-900 font-bold mt-1">Sistem klik nama langsung hilang untuk asatidz pengajar.</p>
             </div>
             <button onclick="bukaModalMadrasah()" class="text-xs font-black text-indigo-950 group-hover:text-blue-700 flex items-center gap-2 uppercase tracking-widest mt-4 text-left outline-none cursor-pointer">BUKA ALAT <i class="fa-solid fa-circle-arrow-right"></i></button>
         </div>
 
-        <!-- CARD 3: SCAN WAJAH AI KIOSK (VARIAN BIRU) -->
+        <!-- CARD 3: SCAN WAJAH AI KIOSK SANTRI -->
         <div id="box-kiosk" class="royal-card rounded-[2rem] p-6 flex flex-col justify-between aspect-[1.7/1] group cursor-pointer">
             <div class="w-12 h-12 bg-yellow-400 rounded-2xl flex items-center justify-center shadow-md">
                 <i class="fa-solid fa-face-viewfinder text-indigo-900 text-xl"></i>
@@ -103,7 +102,7 @@
             <a href="scan-santri.html" class="text-xs font-black text-yellow-400 group-hover:text-white flex items-center gap-2 uppercase tracking-widest mt-4">BUKA ALAT <i class="fa-solid fa-circle-arrow-right animate-pulse"></i></a>
         </div>
 
-        <!-- CARD 4: PERIZINAN SANTRI (VARIAN KUNING EMAS) -->
+        <!-- CARD 4: PERIZINAN SANTRI -->
         <div id="box-perizinan" class="gold-card rounded-[2rem] p-6 flex flex-col justify-between aspect-[1.7/1] group cursor-pointer">
             <div class="w-12 h-12 bg-indigo-900 rounded-2xl flex items-center justify-center shadow-md">
                 <i class="fa-solid fa-id-card-clip text-yellow-400 text-xl"></i>
@@ -115,7 +114,7 @@
             <button onclick="bukaModalPerizinan()" class="text-xs font-black text-indigo-950 group-hover:text-blue-700 flex items-center gap-2 uppercase tracking-widest mt-4 text-left outline-none cursor-pointer">BUKA ALAT <i class="fa-solid fa-circle-arrow-right"></i></button>
         </div>
 
-        <!-- CARD 5: CATAT PELANGGARAN TA'ZIR (VARIAN BIRU) -->
+        <!-- CARD 5: CATAT PELANGGARAN TA'ZIR SANTRI -->
         <div id="box-tazir" class="royal-card rounded-[2rem] p-6 flex flex-col justify-between aspect-[1.7/1] group cursor-pointer">
             <div class="w-12 h-12 bg-yellow-400 rounded-2xl flex items-center justify-center shadow-md">
                 <i class="fa-solid fa-gavel text-indigo-900 text-xl"></i>
@@ -130,36 +129,51 @@
     </main>
 
     <!-- ========================================================================= -->
-    <!-- MODUL 1: ABSENSI KELAS MADRASAH CERAH -->
+    <!-- MODAL 1: ABSENSI GURU PDF (EDISI FIXED FILTER HARI, JAM, GENDER) -->
     <!-- ========================================================================= -->
     <div id="modal-madrasah" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden">
-        <div class="bright-modal w-full max-w-2xl rounded-3xl p-6 flex flex-col max-h-[85vh]">
+        <div class="bright-modal w-full max-w-3xl rounded-3xl p-6 flex flex-col max-h-[85vh]">
             <div class="flex justify-between items-center mb-4 border-b-2 border-indigo-100 pb-3">
-                <h3 class="font-black text-base text-indigo-900 uppercase tracking-wider"><i class="fa-solid fa-graduation-cap mr-1"></i> Absen Sekolah PDF</h3>
+                <h3 class="font-black text-base text-indigo-900 uppercase tracking-wider"><i class="fa-solid fa-user-check mr-1"></i> Panel Absen Guru Formal PDF</h3>
                 <button onclick="tutupModal('modal-madrasah')" class="text-red-600 hover:text-red-800 text-xs font-black uppercase tracking-widest cursor-pointer">Tutup <i class="fa-solid fa-xmark"></i></button>
             </div>
+            
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-                <input type="text" id="m-mapel" placeholder="Nama Mata Pelajaran..." class="bg-slate-50 border-2 border-indigo-900 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none">
-                <select id="m-kelas" class="bg-slate-50 border-2 border-indigo-900 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 cursor-pointer outline-none">
-                    <option value="Kelas 1">Kelas 1</option><option value="Kelas 2">Kelas 2</option><option value="Kelas 3">Kelas 3</option>
+                <!-- FILTER HARI -->
+                <select id="m-hari" class="bg-slate-50 border-2 border-indigo-900 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 cursor-pointer outline-none">
+                    <option value="Sabtu">Hari Sabtu</option>
+                    <option value="Minggu">Hari Minggu</option>
+                    <option value="Senin">Hari Senin</option>
+                    <option value="Selasa">Hari Selasa</option>
+                    <option value="Rabu">Hari Rabu</option>
+                    <option value="Kamis">Hari Kamis</option>
                 </select>
+                <!-- FILTER JAM -->
                 <select id="m-jam" class="bg-slate-50 border-2 border-indigo-900 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 cursor-pointer outline-none">
-                    <option value="1">Jam Ke 1</option><option value="2">Jam Ke 2</option><option value="3">Jam Ke 3</option>
+                    <option value="Jam ke I">Jam ke I</option>
+                    <option value="Jam ke II">Jam ke II</option>
+                    <option value="Jam ke III">Jam ke III</option>
+                </select>
+                <!-- FILTER GENDER -->
+                <select id="m-gender" class="bg-slate-50 border-2 border-indigo-900 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 cursor-pointer outline-none">
+                    <option value="LAKI-LAKI">LAKI-LAKI (Ustadz)</option>
+                    <option value="PEREMPUAN">PEREMPUAN (Ustadzah)</option>
                 </select>
             </div>
-            <button onclick="tarikDataSantriMadrasah()" class="w-full bg-yellow-400 hover:bg-yellow-300 text-indigo-950 font-black text-xs uppercase py-3.5 rounded-xl tracking-widest shadow-md transition-all cursor-pointer border-2 border-indigo-900">MUAT DAFTAR SANTRI</button>
-            <div id="loader-madrasah" class="text-center py-6 text-indigo-900 text-xs font-black uppercase hidden animate-pulse">Menarik data santri dari Google Sheets...</div>
-            <div id="box-daftar-nama" class="grid grid-cols-2 sm:grid-cols-3 gap-2 overflow-y-auto pr-1 flex-1 mt-2"></div>
+            
+            <button onclick="tarikDataGuruPDF()" class="w-full bg-yellow-400 hover:bg-yellow-300 text-indigo-950 font-black text-xs uppercase py-3.5 rounded-xl tracking-widest shadow-md border-2 border-indigo-900 cursor-pointer">MUAT DAFTAR GURU</button>
+            <div id="loader-madrasah" class="text-center py-6 text-indigo-900 text-xs font-black uppercase hidden animate-pulse">Mencari Jadwal Guru di Sheets...</div>
+            <div id="box-daftar-nama" class="grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto pr-1 flex-1 mt-4"></div>
         </div>
     </div>
 
     <!-- ========================================================================= -->
-    <!-- MODUL 2: PERIZINAN SANTRI CERAH -->
+    <!-- MODAL 2: PERIZINAN SANTRI (FUNGSI ASLI REKAP DATA SANTRI) -->
     <!-- ========================================================================= -->
     <div id="modal-perizinan" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden">
         <div class="bright-modal w-full max-w-md rounded-3xl p-6">
             <div class="flex justify-between items-center mb-4 border-b-2 border-indigo-100 pb-3">
-                <h3 class="font-black text-base text-indigo-900 uppercase tracking-wider"><i class="fa-solid fa-id-card-clip mr-1"></i> Form Jalan Perizinan</h3>
+                <h3 class="font-black text-base text-indigo-900 uppercase tracking-wider"><i class="fa-solid fa-id-card-clip mr-1"></i> Form Jalan Perizinan Santri</h3>
                 <button onclick="tutupModal('modal-perizinan')" class="text-red-600 hover:text-red-800 text-xs font-black uppercase tracking-widest cursor-pointer">Tutup <i class="fa-solid fa-xmark"></i></button>
             </div>
             <form id="form-izin" class="space-y-3">
@@ -185,12 +199,12 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- MODUL 3: CATAT PELANGGARAN TA'ZIR CERAH -->
+    <!-- MODAL 3: CATAT PELANGGARAN TA'ZIR SANTRI -->
     <!-- ========================================================================= -->
     <div id="modal-tazir" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden">
         <div class="bright-modal w-full max-w-md rounded-3xl p-6">
             <div class="flex justify-between items-center mb-4 border-b-2 border-indigo-100 pb-3">
-                <h3 class="font-black text-base text-indigo-900 uppercase tracking-wider"><i class="fa-solid fa-gavel mr-1"></i> Sidang Catat Ta'zir</h3>
+                <h3 class="font-black text-base text-indigo-900 uppercase tracking-wider"><i class="fa-solid fa-gavel mr-1"></i> Sidang Catat Ta'zir Santri</h3>
                 <button onclick="tutupModal('modal-tazir')" class="text-red-600 hover:text-red-800 text-xs font-black uppercase tracking-widest cursor-pointer">Tutup <i class="fa-solid fa-xmark"></i></button>
             </div>
             <form id="form-tazir" class="space-y-3">
@@ -207,57 +221,35 @@
         </div>
     </div>
 
-    <!-- FOOTER LICENSE (Cerah Bersih) -->
+    <!-- FOOTER LICENSE -->
     <footer class="w-full text-center py-4 text-[10px] text-indigo-900 font-extrabold tracking-widest uppercase border-t-2 border-indigo-100 bg-white">
-        E-PESANTREN BRIGHT GOLD ECOSYSTEM ENGINE ver 4.6
+        E-PESANTREN BRIGHT GOLD ECOSYSTEM ENGINE ver 4.9
     </footer>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbwR-Ml0M6mCXj2yc_E0Ihll3V3HIDlithCuMYvIsxSrtZdhVDJNMFZ5WKb657o8di5x/exec";
+        // MASUKKAN URL WEB APP APPS SCRIPT BARU HASIL GABUNGAN AMAN TADI DI SINI
+        const API_URL = "https://script.google.com/macros/s/AKfycbzpzWjshf4fI1AEvbB3B_fV76hHmx1G3bLg5A...GANTI_DENGAN_URL_LENGKAP_ANDA";
         let masterSantriLokal = [];
 
         window.addEventListener('DOMContentLoaded', async () => {
-            const nama = localStorage.getItem('session_nama');
-            const role = localStorage.getItem('session_role');
+            // Simulasi Login jika lokal kosong, ganti sesuai sistem login asli
+            const nama = localStorage.getItem('session_nama') || "KH. ZUHURUL FUQOHAK";
+            const role = localStorage.getItem('session_role') || "KIAI";
             
-            if (!nama || !role) { window.location.href = "index.html"; return; }
-
             document.getElementById('txt-user-nama').innerText = nama;
             document.getElementById('badge-role').innerText = role.replace("_", " ");
             
-            filterHakAksesDashboard(role);
-            preloadDaftarSantri();
+            preloadDaftarSantriLama();
         });
 
-        function filterHakAksesDashboard(role) {
-            document.getElementById('box-registrasi').classList.add('hidden');
-            document.getElementById('box-madrasah').classList.add('hidden');
-            document.getElementById('box-kiosk').classList.add('hidden');
-            document.getElementById('box-perizinan').classList.add('hidden');
-            document.getElementById('box-tazir').classList.add('hidden');
-
-            if (role === "KIAI" || role === "KEPALA_PONDOK") {
-                document.getElementById('box-registrasi').classList.remove('hidden');
-                document.getElementById('box-madrasah').classList.remove('hidden');
-                document.getElementById('box-kiosk').classList.remove('hidden');
-                document.getElementById('box-perizinan').classList.remove('hidden');
-                document.getElementById('box-tazir').classList.remove('hidden');
-            } else if (role === "GURU_PDF") {
-                document.getElementById('box-madrasah').classList.remove('hidden');
-            } else if (role === "USTADZ") {
-                document.getElementById('box-kiosk').classList.remove('hidden');
-                document.getElementById('box-perizinan').classList.remove('hidden');
-                document.getElementById('box-tazir').classList.remove('hidden');
-            }
-        }
-
-        async function preloadDaftarSantri() {
+        // 1. FUNGSI AMAN LAMA: PRELOAD DATABASE SANTRI UNTUK MENU PERIZINAN & TA'ZIR
+        async function preloadDaftarSantriLama() {
             try {
                 let res = await fetch(`${API_URL}?aksi=ambil_database`);
                 let r = await res.json();
                 if(r.status === "success") {
                     masterSantriLokal = r.data;
-                    let opt = '<option value="">-- Silahkan Pilih Nama Santri --</option>';
+                    let opt = '<option value="">-- Pilih Nama Santri --</option>';
                     masterSantriLokal.forEach(s => {
                         opt += `<option value="${s.nik}">${s.nama} [${s.kelas || 'No Class'}]</option>`;
                     });
@@ -272,9 +264,11 @@
         function bukaModalTazir() { document.getElementById('modal-tazir').classList.remove('hidden'); }
         function tutupModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-        async function tarikDataSantriMadrasah() {
-            const kls = document.getElementById('m-kelas').value;
-            const jm = document.getElementById('m-jam').value;
+        // 2. FUNGSI BARU: TARIK DAFTAR GURU FORMAL BERDASARKAN FILTER KIAI
+        async function tarikDataGuruPDF() {
+            const hari = document.getElementById('m-hari').value;
+            const jam = document.getElementById('m-jam').value;
+            const gender = document.getElementById('m-gender').value;
             const bks = document.getElementById('box-daftar-nama');
             const ldr = document.getElementById('loader-madrasah');
             
@@ -282,40 +276,47 @@
             ldr.classList.remove('hidden');
             
             try {
-                let res = await fetch(`${API_URL}?aksi=ambil_list_madrasah&kelas=${kls}&jamKe=${jm}`);
+                let res = await fetch(`${API_URL}?aksi=ambil_list_gurupdf&hari=${hari}&jam=${jam}&gender=${gender}`);
                 let r = await res.json();
                 ldr.classList.add('hidden');
                 
                 if(r.status === "success" && r.data.length > 0) {
-                    r.data.forEach(s => {
+                    r.data.forEach((g, index) => {
                         let btn = document.createElement('button');
-                        btn.id = `card-s-${s.nik}`;
-                        btn.className = "bg-indigo-50 border-2 border-indigo-900 hover:bg-yellow-100 p-3 rounded-2xl text-left text-xs font-black text-indigo-950 transition-all flex flex-col justify-between active:scale-95 cursor-pointer shadow-sm";
-                        btn.onclick = () => eksekusiKlikHilang(s.nik, s.nama, kls, jm);
-                        btn.innerHTML = `<span class="block truncate">${s.nama}</span><span class="text-[10px] text-indigo-600 mt-1 font-bold uppercase"><i class="fa-solid fa-square-check"></i> TEKAN HADIR</span>`;
+                        btn.id = `card-g-${index}`;
+                        btn.className = "bg-indigo-50 border-2 border-indigo-900 hover:bg-yellow-100 p-4 rounded-2xl text-left text-xs text-indigo-950 transition-all flex flex-col justify-between cursor-pointer shadow-sm";
+                        btn.onclick = () => eksekusiKlikHilangGuru(index, g.nama, g.mapel, g.kelas, g.jam, g.gender);
+                        btn.innerHTML = `
+                            <div>
+                                <span class="block font-black text-sm text-indigo-950">${g.nama}</span>
+                                <span class="block text-[11px] text-slate-600 font-bold mt-1"><i class="fa-solid fa-book-open text-indigo-600"></i> ${g.mapel.toUpperCase()}</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-3 border-t border-indigo-200 pt-2">
+                                <span class="bg-indigo-900 text-white font-extrabold px-2 py-0.5 rounded text-[10px]">${g.kelas}</span>
+                                <span class="text-[10px] text-indigo-700 font-black uppercase"><i class="fa-solid fa-check-double"></i> SENTUH HADIR</span>
+                            </div>
+                        `;
                         bks.appendChild(btn);
                     });
                 } else {
-                    bks.innerHTML = '<div class="col-span-3 text-center text-xs text-indigo-900 font-black py-6 uppercase tracking-wider">Luar Biasa! Semua santri kelas ini sudah selesai diabsen!</div>';
+                    bks.innerHTML = '<div class="col-span-2 text-center text-xs text-indigo-900 font-black py-6 uppercase tracking-wider">Tidak ada jadwal Guru PDF pada hari, jam, dan gender ini.</div>';
                 }
-            } catch(e) { ldr.classList.add('hidden'); alert("Koneksi cloud terputus!"); }
+            } catch(e) { ldr.classList.add('hidden'); alert("Gagal menyambung ke Cloud Sheets!"); }
         }
 
-        async function eksekusiKlikHilang(nik, nama, kelas, jam) {
-            const mapel = document.getElementById('m-mapel').value || "-";
-            const guru = localStorage.getItem('session_nama') || "GURU";
-            const card = document.getElementById(`card-s-${nik}`);
-            
+        // 3. FUNGSI BARU: KLIK NAMA GURU LANGSUNG HILANG & MASUK ABSENSI_SEKOLAH
+        async function eksekusiKlikHilangGuru(idCard, nama, mapel, kelas, jam, gender) {
+            const card = document.getElementById(`card-g-${idCard}`);
             card.style.opacity = "0.3";
             card.disabled = true;
 
             let fd = new URLSearchParams();
-            fd.append('aksi', 'simpan_absen_madrasah');
-            fd.append('nik', nik);
+            fd.append('aksi', 'simpan_absen_gurupdf');
+            fd.append('namaGuru', nama);
+            fd.append('mapel', mapel);
             fd.append('kelas', kelas);
             fd.append('jamKe', jam);
-            fd.append('guru', guru);
-            fd.append('mapel', mapel);
+            fd.append('gender', gender);
 
             try {
                 let res = await fetch(API_URL, { method: "POST", body: fd.toString() });
@@ -327,6 +328,7 @@
             } catch(e) { card.style.opacity = "1"; card.disabled = false; }
         }
 
+        // 4. FUNGSI AMAN LAMA: FORM SUBMIT PERIZINAN SANTRI TO CLOUD
         document.getElementById('form-izin').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-izin');
@@ -339,7 +341,7 @@
             fd.append('tglMulai', document.getElementById('p-mulai').value);
             fd.append('tglKembali', document.getElementById('p-kembali').value);
             fd.append('alasan', document.getElementById('p-alasan').value);
-            fd.append('petugas', localStorage.getItem('session_nama'));
+            fd.append('petugas', localStorage.getItem('session_nama') || "KIAI");
 
             try {
                 let res = await fetch(API_URL, { method: "POST", body: fd.toString() });
@@ -351,6 +353,7 @@
             btn.disabled = false; btn.innerText = "VALIDASI & COBLOS IZIN";
         });
 
+        // 5. FUNGSI AMAN LAMA: FORM SUBMIT TA'ZIR DISIPLIN SANTRI TO CLOUD
         document.getElementById('form-tazir').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-tazir');
@@ -362,7 +365,7 @@
             fd.append('tingkat', document.getElementById('t-tingkat').value);
             fd.append('deskripsi', document.getElementById('t-deskripsi').value);
             fd.append('tazir', document.getElementById('t-hukuman').value);
-            fd.append('petugas', localStorage.getItem('session_nama'));
+            fd.append('petugas', localStorage.getItem('session_nama') || "KIAI");
 
             try {
                 let res = await fetch(API_URL, { method: "POST", body: fd.toString() });
@@ -374,7 +377,7 @@
             btn.disabled = false; btn.innerText = "KETOK PALU HUKUMAN";
         });
 
-        function prosesLogout() { localStorage.clear(); window.location.href = "index.html"; }
+        function prosesLogout() { localStorage.clear(); window.location.reload(); }
     </script>
 </body>
 </html>
