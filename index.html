@@ -132,15 +132,18 @@
             setTimeout(() => { f.classList.remove('opacity-100'); f.classList.add('opacity-0'); }, 80);
 
             const realCanvas = document.getElementById('canvas-capture');
-            realCanvas.width = 400; 
-            realCanvas.height = 300;
-            realCanvas.getContext('2d').drawImage(video, 0, 0, 400, 300);
             
-            const base64Image = realCanvas.toDataURL('image/jpeg', 0.5).split(',')[1];
+            // RESOLUSI STABIL Ringan (320x240)
+            realCanvas.width = 320; 
+            realCanvas.height = 240;
+            realCanvas.getContext('2d').drawImage(video, 0, 0, 320, 240);
+            
+            // Kompresi dioptimasi ke 30% (0.3) agar payload data teks sangat aman di Google
+            const base64Image = realCanvas.toDataURL('image/jpeg', 0.3).split(',')[1];
             const waktu = document.getElementById('waktu-shalat').value;
 
             const formPayload = new URLSearchParams();
-            formPayload.append('aksi', 'absen'); // Rute khusus absensi harian
+            formPayload.append('aksi', 'absen');
             formPayload.append('imageBlob', base64Image);
             formPayload.append('waktuShalat', waktu);
 
@@ -164,7 +167,7 @@
                     tampilkanPesanGagal(r.message || "Wajah tidak cocok.");
                 }
             } catch (e) {
-                tampilkanPesanGagal("Koneksi Google Script Terputus.");
+                tampilkanPesanGagal("Server Google Menolak Akses / Terjadi Error.");
             }
         }
 
