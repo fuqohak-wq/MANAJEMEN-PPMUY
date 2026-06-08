@@ -69,14 +69,18 @@
             statusReg.innerText = "Sedang mendaftarkan wajah ke Cloud...";
             statusReg.className = "text-[10px] mt-3 text-amber-400 font-bold animate-pulse";
 
-            // Flash effect
             const f = document.getElementById('flash'); f.classList.remove('opacity-0'); f.classList.add('opacity-100');
             setTimeout(() => { f.classList.remove('opacity-100'); f.classList.add('opacity-0'); }, 80);
 
             const canvas = document.getElementById('canvas-daftar');
-            canvas.width = 400; canvas.height = 300;
-            canvas.getContext('2d').drawImage(video, 0, 0, 400, 300);
-            const base64Image = canvas.toDataURL('image/jpeg', 0.5).split(',')[1];
+            
+            // RESOLUSI STABIL Ringan (320x240)
+            canvas.width = 320; 
+            canvas.height = 240;
+            canvas.getContext('2d').drawImage(video, 0, 0, 320, 240);
+            
+            // Kompresi dioptimasi ke 30% (0.3) agar payload data teks sangat aman di Google
+            const base64Image = canvas.toDataURL('image/jpeg', 0.3).split(',')[1];
 
             const formPayload = new URLSearchParams();
             formPayload.append('aksi', 'daftar');
@@ -102,7 +106,7 @@
                     statusReg.className = "text-[10px] mt-3 text-red-400 font-bold";
                 }
             } catch (e) {
-                statusReg.innerText = "Koneksi terputus atau server sibuk.";
+                statusReg.innerText = "Server Google Menolak Akses / Terjadi Error.";
                 statusReg.className = "text-[10px] mt-3 text-red-400 font-bold";
             } finally {
                 btnJepret.disabled = false;
