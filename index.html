@@ -70,8 +70,15 @@
                 
                 label.innerText = "MENGUNDUH DATA MASTER...";
                 
-                // 2. Tarik data koordinat dari Google Sheets ke lokal memory Kiosk
-                const res = await fetch(`${API_URL}?aksi=ambil_database`);
+                // 2. AMBIL DATA MASTER MENGGUNAKAN METODE POST (TEMBUS KEBAL CORS)
+                const formPayload = new URLSearchParams();
+                formPayload.append('aksi', 'ambil_database');
+
+                const res = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: formPayload.toString()
+                });
                 const json = await res.json();
                 
                 if (json.status === "success") {
@@ -92,6 +99,7 @@
             } catch (e) {
                 label.innerText = "GAGAL START KIOSK";
                 label.className = "text-[9px] bg-red-600 text-white px-3 py-1.5 rounded-xl font-bold";
+                console.error(e);
             }
         });
 
@@ -121,7 +129,7 @@
             let santriDitemukan = null;
             let skorTerbaik = 999;
 
-            // Membandingkan data secara instan langsung di memori perangkat (Bebas lemot!)
+            // Membandingkan data secara instan langsung di memori perangkat
             for (let santri of databaseSantri) {
                 try {
                     let posisiMaster = JSON.parse(santri.vektor);
@@ -142,7 +150,7 @@
                 document.getElementById('txt-nama-sukses').innerText = santriDitemukan.nama;
                 document.getElementById('pop-success').classList.remove('hidden');
 
-                // Kirim laporan kehadiran ke Google Sheet (Sangat ringan karena hanya kirim teks NIK & Nama)
+                // Kirim laporan kehadiran ke Google Sheet (Sangat ringan)
                 const waktu = document.getElementById('waktu-shalat').value;
                 const formPayload = new URLSearchParams();
                 formPayload.append('aksi', 'absen');
@@ -173,7 +181,7 @@
             let totalJarak = 0;
             let jumlah = Math.min(titik1.length, titik2.length);
             for (let i = 0; i < jumlah; i++) {
-                totalJarcak = totalJarak + Math.pow(titik1[i]._x - titik2[i]._x, 2) + Math.pow(titik1[i]._y - titik2[i]._y, 2);
+                totalJarak = totalJarak + Math.pow(titik1[i]._x - titik2[i]._x, 2) + Math.pow(titik1[i]._y - titik2[i]._y, 2);
             }
             return Math.sqrt(totalJarak) / jumlah;
         }
