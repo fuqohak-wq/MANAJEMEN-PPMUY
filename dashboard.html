@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Manajemen Pesantren</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .premium-bg {
+            background: radial-gradient(circle at top left, rgba(30, 41, 59, 0.5), transparent), #090d16;
+        }
+        .card-glow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -15px rgba(6, 182, 212, 0.15);
+        }
+    </style>
+</head>
+<body class="premium-bg text-slate-100 font-sans min-h-screen flex flex-col">
+
+    <!-- TOP BAR NAVIGATION (Persis Tata Letak image_04a647.png) -->
+    <header class="w-full bg-slate-900/60 backdrop-blur-md border-b border-slate-800/60 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-emerald-500 flex items-center justify-center shadow-lg shadow-cyan-500/10">
+                <i class="fa-solid fa-shield-halved text-slate-950 text-sm"></i>
+            </div>
+            <div>
+                <h1 id="txt-user-nama" class="text-sm font-black text-white tracking-wide uppercase">Memuat...</h1>
+                <span id="badge-role" class="text-[9px] bg-cyan-950 text-cyan-400 px-2 py-0.5 rounded-md font-extrabold tracking-widest border border-cyan-800 uppercase block mt-0.5 w-max">ROLE</span>
+            </div>
+        </div>
+        
+        <!-- Tombol Logout Premium -->
+        <button onclick="prosesLogout()" class="w-9 h-9 rounded-xl bg-slate-950 hover:bg-red-950 border border-slate-800 hover:border-red-800 flex items-center justify-center text-slate-400 hover:text-red-400 transition-all cursor-pointer">
+            <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
+        </button>
+    </header>
+
+    <!-- MAIN DASHBOARD CONTENT GRID -->
+    <main class="max-w-7xl w-full mx-auto p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-auto">
+        
+        <!-- BOX 1: REGISTRASI FOTO WAJAH (HIJAU TOAL/TEAL) -->
+        <div id="box-registrasi" class="bg-gradient-to-br from-teal-600 to-teal-800 rounded-3xl p-6 shadow-xl card-glow transition-all duration-300 flex flex-col justify-between aspect-[2/1] border border-teal-500/20 group relative overflow-hidden">
+            <div class="w-10 h-10 bg-slate-950/20 rounded-xl flex items-center justify-center mb-4"><i class="fa-solid fa-camera text-white text-base"></i></div>
+            <div>
+                <h2 class="text-base font-black text-white tracking-wide">Registrasi Foto Wajah</h2>
+                <p class="text-[11px] text-teal-100/70 font-medium mt-0.5">Aktivasi koordinat geometri biodata santri dari Tally.</p>
+            </div>
+            <a href="daftar-wajah.html" class="text-[10px] font-bold text-white/90 group-hover:text-white mt-4 flex items-center gap-1.5 uppercase tracking-widest">Buka Alat <i class="fa-solid fa-arrow-right text-[9px] transition-transform group-hover:translate-x-1"></i></a>
+        </div>
+
+        <!-- BOX 2: ABSENSI KELAS MADRASAH (HIJAU EMERALD) -->
+        <div id="box-madrasah" class="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-3xl p-6 shadow-xl card-glow transition-all duration-300 flex flex-col justify-between aspect-[2/1] border border-emerald-500/20 group relative overflow-hidden">
+            <div class="w-10 h-10 bg-slate-950/20 rounded-xl flex items-center justify-center mb-4"><i class="fa-solid fa-graduation-cap text-white text-base"></i></div>
+            <div>
+                <h2 class="text-base font-black text-white tracking-wide">Absensi Kelas Madrasah</h2>
+                <p class="text-[11px] text-emerald-100/70 font-medium mt-0.5">Sistem absen manual klik nama langsung hilang (Sekolah PDF).</p>
+            </div>
+            <a href="#" class="text-[10px] font-bold text-white/90 group-hover:text-white mt-4 flex items-center gap-1.5 uppercase tracking-widest">Buka Alat <i class="fa-solid fa-arrow-right text-[9px] transition-transform group-hover:translate-x-1"></i></a>
+        </div>
+
+        <!-- BOX 3: SCAN WAJAH AI KIOSK (UNGU) -->
+        <div id="box-kiosk" class="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-3xl p-6 shadow-xl card-glow transition-all duration-300 flex flex-col justify-between aspect-[2/1] border border-indigo-500/20 group relative overflow-hidden">
+            <div class="w-10 h-10 bg-slate-950/20 rounded-xl flex items-center justify-center mb-4"><i class="fa-solid fa-face-viewfinder text-white text-base"></i></div>
+            <div>
+                <h2 class="text-base font-black text-white tracking-wide">Mobile Kiosk & Scan Wajah</h2>
+                <p class="text-[11px] text-indigo-100/70 font-medium mt-0.5">Mesin utama presensi live menggunakan kecerdasan buatan.</p>
+            </div>
+            <a href="scan-santri.html" class="text-[10px] font-bold text-white/90 group-hover:text-white mt-4 flex items-center gap-1.5 uppercase tracking-widest">Buka Alat <i class="fa-solid fa-arrow-right text-[9px] transition-transform group-hover:translate-x-1"></i></a>
+        </div>
+
+        <!-- BOX 4: PERIZINAN & WA GATEWAY (ORANYE) -->
+        <div id="box-perizinan" class="bg-gradient-to-br from-amber-600 to-amber-800 rounded-3xl p-6 shadow-xl card-glow transition-all duration-300 flex flex-col justify-between aspect-[2/1] border border-amber-500/20 group relative overflow-hidden">
+            <div class="w-10 h-10 bg-slate-950/20 rounded-xl flex items-center justify-center mb-4"><i class="fa-solid fa-id-card-clip text-white text-base"></i></div>
+            <div>
+                <h2 class="text-base font-black text-white tracking-wide">Perizinan & WA Gateway</h2>
+                <p class="text-[11px] text-amber-100/70 font-medium mt-0.5">Input izin keluar masuk pondok dan laporan WhatsApp.</p>
+            </div>
+            <a href="#" class="text-[10px] font-bold text-white/90 group-hover:text-white mt-4 flex items-center gap-1.5 uppercase tracking-widest">Buka Alat <i class="fa-solid fa-arrow-right text-[9px] transition-transform group-hover:translate-x-1"></i></a>
+        </div>
+
+        <!-- BOX 5: CATAT PELANGGARAN TA'ZIR (MERAH) -->
+        <div id="box-tazir" class="bg-gradient-to-br from-red-600 to-red-800 rounded-3xl p-6 shadow-xl card-glow transition-all duration-300 flex flex-col justify-between aspect-[2/1] border border-red-500/20 group relative overflow-hidden">
+            <div class="w-10 h-10 bg-slate-950/20 rounded-xl flex items-center justify-center mb-4"><i class="fa-solid fa-gavel text-white text-base"></i></div>
+            <div>
+                <h2 class="text-base font-black text-white tracking-wide">Catat Pelanggaran (Ta'zir)</h2>
+                <p class="text-[11px] text-red-100/70 font-medium mt-0.5">Pencatatan pelanggaran disiplin santri terintegrasi.</p>
+            </div>
+            <a href="#" class="text-[10px] font-bold text-white/90 group-hover:text-white mt-4 flex items-center gap-1.5 uppercase tracking-widest">Buka Alat <i class="fa-solid fa-arrow-right text-[9px] transition-transform group-hover:translate-x-1"></i></a>
+        </div>
+
+    </main>
+
+    <!-- FOOTER LICENSE -->
+    <footer class="w-full text-center py-4 text-[9px] text-slate-600 font-bold tracking-widest uppercase border-t border-slate-900">
+        Premium Eco-System Dashboard Engine ver 4.2
+    </footer>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            // Membaca data token login dari localstorage
+            const nama = localStorage.getItem('session_nama');
+            const role = localStorage.getItem('session_role');
+            
+            if (!nama || !role) {
+                // Tendang kembali ke login jika mencoba masuk ilegal tanpa login
+                window.location.href = "index.html";
+                return;
+            }
+
+            // Pasang Nama dan Badge Pengakses
+            document.getElementById('txt-user-nama').innerText = nama;
+            document.getElementById('badge-role').innerText = role.replace("_", " ");
+
+            // SINKRONISASI LOGIKA HAK AKSES MENU PREMIUM
+            filterHakAksesMenu(role);
+        });
+
+        function filterHakAksesMenu(role) {
+            // Sembunyikan semua box terlebih dahulu demi keamanan data
+            document.getElementById('box-registrasi').classList.add('hidden');
+            document.getElementById('box-madrasah').classList.add('hidden');
+            document.getElementById('box-kiosk').classList.add('hidden');
+            document.getElementById('box-perizinan').classList.add('hidden');
+            document.getElementById('box-tazir').classList.add('hidden');
+
+            if (role === "KIAI" || role === "KEPALA_PONDOK") {
+                // Kiai & Kepala Pondok melihat seluruh instrumen sistem manajemen tanpa batas
+                document.getElementById('box-registrasi').classList.remove('hidden');
+                document.getElementById('box-madrasah').classList.remove('hidden');
+                document.getElementById('box-kiosk').classList.remove('hidden');
+                document.getElementById('box-perizinan').classList.remove('hidden');
+                document.getElementById('box-tazir').classList.remove('hidden');
+            } 
+            else if (role === "GURU_PDF") {
+                // Guru PDF hanya diizinkan mengelola instrumen pendidikan madrasah
+                document.getElementById('box-madrasah').classList.remove('hidden');
+            } 
+            else if (role === "USTADZ") {
+                // Ustadz/Pengurus hanya mengurusi Kiosk santri, Perizinan, dan Penegakan Ta'zir
+                document.getElementById('box-kiosk').classList.remove('hidden');
+                document.getElementById('box-perizinan').classList.remove('hidden');
+                document.getElementById('box-tazir').classList.remove('hidden');
+            }
+        }
+
+        function prosesLogout() {
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>
