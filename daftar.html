@@ -99,7 +99,11 @@
             fp.append('kelas', kelas.toUpperCase());
             fp.append('vektorWajah', JSON.stringify(hasilAI.landmarks.positions));
 
-            const res = await fetch(API_URL, { method: "POST", body: fp.toString() });
+            const res = await fetch(API_URL, { 
+                method: "POST", 
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: fp.toString() 
+            });
             const r = await res.json();
             if (r.status === "success") {
                 statusReg.innerText = "🎉 Berhasil Didaftarkan!";
