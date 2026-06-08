@@ -3,55 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Registrasi Wajah Santri</title>
+    <title>Registrasi Wajah Santri via Nama</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>body { touch-action: manipulation; }</style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between p-4">
 
+    <!-- Kotak Form Input & Pencarian Nama -->
     <div class="w-full max-w-md mx-auto bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col gap-3 shadow-lg relative">
         <div class="flex justify-between items-center">
-            <h1 class="text-xs font-black text-amber-400 uppercase tracking-wider"><i class="fa-solid fa-user-plus mr-1"></i> CARI NAMA & INPUT WAJAH SANTRI</h1>
-            <span id="txt-db-status" class="text-[10px] text-amber-500 font-bold animate-pulse">Sinkronisasi Database...</span>
+            <h1 class="text-xs font-black text-amber-400 uppercase tracking-wider"><i class="fa-solid fa-user-plus mr-1"></i> AKTIVASI WAJAH ASLI (CARI NAMA)</h1>
+            <span id="txt-db-status" class="text-[10px] text-amber-500 font-bold animate-pulse">Memuat Database...</span>
         </div>
         
         <div class="relative">
-            <label class="text-[10px] font-black text-slate-400 tracking-widest block uppercase mb-1">Cari Nama Santri:</label>
+            <label class="text-[10px] font-black text-slate-400 tracking-widest block uppercase mb-1">Ketik Nama Santri:</label>
             <div class="relative flex items-center">
-                <input type="text" id="input-cari-nama" placeholder="Ketik nama santri..." class="w-full bg-slate-950 border-2 border-slate-700 rounded-xl pl-4 pr-10 py-3 text-sm font-bold text-white outline-none focus:border-amber-500" autocomplete="off">
+                <input type="text" id="input-cari-nama" placeholder="Ketik nama santri di sini..." class="w-full bg-slate-950 border-2 border-slate-700 rounded-xl pl-4 pr-10 py-3 text-sm font-bold text-white outline-none focus:border-amber-500" autocomplete="off">
                 <i class="fa-solid fa-magnifying-glass absolute right-4 text-slate-500 text-xs"></i>
             </div>
-            <div id="dropdown-hasil" class="absolute left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded-xl max-h-48 overflow-y-auto hidden z-50 shadow-2xl"></div>
+            
+            <!-- Dropdown Hasil Pencarian Nama -->
+            <div id="dropdown-hasil" class="absolute left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded-xl max-h-48 overflow-y-auto hidden z-50 shadow-2xl">
+                <!-- Hasil pencarian akan disuntikkan di sini via JS -->
+            </div>
         </div>
 
+        <!-- Hidden input untuk menyimpan NIK asli di latar belakang -->
         <input type="hidden" id="input-nik-terpilih">
         
+        <!-- Identitas Santri Terpilih -->
         <div id="info-santri-terpilih" class="bg-slate-950 p-2.5 rounded-xl border border-dashed border-slate-800 hidden text-center">
-            <p class="text-xs font-black text-emerald-400 tracking-wide uppercase"><i class="fa-solid fa-user-check mr-1"></i> SANTRI TERPILIH</p>
+            <p class="text-xs font-black text-emerald-400 tracking-wide uppercase"><i class="fa-solid fa-user-check mr-1"></i> Target Terpilih</p>
             <p id="lbl-nama-terpilih" class="text-sm font-bold text-white mt-0.5"></p>
             <p id="lbl-nik-kelas-terpilih" class="text-[10px] text-slate-500 mt-0.5 font-mono"></p>
         </div>
     </div>
 
+    <!-- Area Kamera Selfie -->
     <div class="w-full max-w-md mx-auto my-auto flex flex-col justify-center items-center">
         <div class="relative w-full aspect-square bg-slate-900 border-2 border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
             <video id="video-daftar" autoplay playsinline class="w-full h-full object-cover scale-x-[-1]"></video>
             <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div id="kotak-frame" class="w-64 h-64 border-4 border-dashed border-amber-500/40 rounded-3xl flex items-center justify-center transition-all duration-300">
-                    <span id="txt-instruksi" class="text-xs bg-slate-950/90 text-amber-400 px-4 py-2 rounded-xl font-black uppercase tracking-widest border border-amber-500/30">Memuat Jaringan AI...</span>
+                    <span id="txt-instruksi" class="text-xs bg-slate-950/90 text-amber-400 px-4 py-2 rounded-xl font-black uppercase tracking-widest border border-amber-500/30 shadow-2xl">Memuat Engine AI...</span>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Tombol Eksekusi -->
     <div class="w-full max-w-md mx-auto space-y-2">
-        <button id="btn-simpan" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-4 rounded-2xl text-xs uppercase text-center tracking-widest shadow-lg transition-all cursor-pointer">SIMPAN KOORDINAT WAJAH</button>
-        <a href="dashboard.html" class="w-full bg-slate-900 text-slate-400 font-bold py-3 rounded-2xl text-xs uppercase text-center block tracking-wider">Kembali ke Dashboard</a>
+        <button id="btn-simpan" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-4 rounded-2xl text-xs uppercase text-center tracking-widest shadow-lg transition-all"><i class="fa-solid fa-id-card-clip mr-1"></i> KUNCI & SIMPAN WAJAH ASLI</button>
+        <a href="index.html" class="w-full bg-slate-900 text-slate-400 font-bold py-3 rounded-2xl text-xs uppercase text-center block tracking-wider">Kembali</a>
+    </div>
+
+    <!-- Notifikasi Pop-Up -->
+    <div id="pop-notif" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-6 hidden z-50">
+        <div id="box-notif" class="w-full max-w-sm p-6 rounded-3xl text-center shadow-2xl border-2">
+            <span class="font-black text-sm block mt-1" id="txt-notif-msg">Status Pesan</span>
+        </div>
     </div>
 
     <script>
-        const API_URL = "URL_WEB_APP_ANDA";
+        const API_URL = "https://script.google.com/macros/s/AKfycbwR-Ml0M6mCXj2yc_E0Ihll3V3HIDlithCuMYvIsxSrtZdhVDJNMFZ5WKb657o8di5x/exec";
         let video = document.getElementById('video-daftar');
         let label = document.getElementById('txt-instruksi');
         let frame = document.getElementById('kotak-frame');
@@ -63,13 +80,13 @@
         let databaseSantriMaster = [];
 
         window.addEventListener('DOMContentLoaded', async () => {
-            if (!localStorage.getItem('session_nama')) { window.location.href = "index.html"; return; }
             try {
+                // 1. Load model Face-API AI dari CDN
                 await faceapi.nets.tinyFaceDetector.loadFromUri('https://unpkg.com/@vladmandic/face-api/model');
                 await faceapi.nets.faceLandmark68Net.loadFromUri('https://unpkg.com/@vladmandic/face-api/model');
                 
-                const p = new URLSearchParams(); p.append('aksi', 'ambil_database');
-                const res = await fetch(API_URL, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: p.toString() });
+                // 2. Tarik data master santri langsung via GET bypass CORS
+                const res = await fetch(`${API_URL}?aksi=ambil_database`, { method: "GET" });
                 const json = await res.json();
                 
                 if (json.status === "success") {
@@ -78,11 +95,13 @@
                     dbStatus.className = "text-[10px] text-emerald-400 font-bold";
                 }
 
+                // 3. Hidupkan Kamera
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
                 video.srcObject = stream;
-                label.innerText = "PILIH NAMA SANTRI";
+                label.innerText = "PILIH NAMA";
                 aiReady = true;
                 
+                // 4. Jalankan Detektor Wajah Real-time
                 setInterval(async () => {
                     if (!aiReady || video.paused || video.ended) return;
                     const deteksi = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 128, scoreThreshold: 0.4 })).withFaceLandmarks();
@@ -90,62 +109,129 @@
                         posisiWajahTerakhir = deteksi.landmarks.positions;
                         frame.className = "w-64 h-64 border-4 border-solid border-emerald-400 rounded-3xl flex items-center justify-center bg-emerald-500/10";
                         label.innerText = "WAJAH TERKUNCI";
+                        label.className = "text-xs bg-slate-950/90 text-emerald-400 px-4 py-2 rounded-xl font-black uppercase tracking-widest border border-emerald-500/30";
                     } else {
                         posisiWajahTerakhir = null;
-                        frame.className = "w-64 h-64 border-4 border-dashed border-amber-500/40 rounded-3xl flex items-center justify-center";
-                        label.innerText = "HADAPKAN WAJAH KE FRAME";
+                        frame.className = "w-64 h-64 border-4 border-dashed border-amber-500/40 rounded-3xl flex items-center justify-center transition-all duration-300";
+                        label.innerText = "HADAPKAN WAJAH KE KOTAK";
+                        label.className = "text-xs bg-slate-950/90 text-amber-400 px-4 py-2 rounded-xl font-black uppercase tracking-widest border border-amber-500/30";
                     }
                 }, 300);
-            } catch (e) { label.innerText = "ENGINE CRASH"; }
+            } catch (e) {
+                label.innerText = "AI ENGINE CRASH";
+            }
         });
 
+        // =========================================================================
+        // ENGINE PENCARIAN NAMA OTOMATIS (AUTO-COMPLETE DROPDOWN)
+        // =========================================================================
         const inputCari = document.getElementById('input-cari-nama');
         const dropdownHasil = document.getElementById('dropdown-hasil');
 
         inputCari.addEventListener('input', () => {
             let kataKunci = inputCari.value.toLowerCase().trim();
             dropdownHasil.innerHTML = '';
-            if (kataKunci.length < 1) { dropdownHasil.classList.add('hidden'); return; }
-            let cocok = databaseSantriMaster.filter(s => s.nama.toLowerCase().includes(kataKunci));
-            if (cocok.length === 0) { dropdownHasil.classList.remove('hidden'); return; }
 
-            cocok.slice(0, 5).forEach(santri => {
+            if (kataKunci.length < 1) {
+                dropdownHasil.classList.add('hidden');
+                return;
+            }
+
+            // Filter nama yang mengandung kata kunci ketikan
+            let cocok = databaseSantriMaster.filter(s => s.nama.toLowerCase().includes(kataKunci));
+
+            if (cocok.length === 0) {
+                dropdownHasil.innerHTML = `<div class="px-4 py-3 text-xs text-slate-500 font-bold">Nama tidak ditemukan...</div>`;
+                dropdownHasil.classList.remove('hidden');
+                return;
+            }
+
+            cocok.slice(0, 10).forEach(santri => {
                 let item = document.createElement('div');
-                item.className = "px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-amber-500 hover:text-slate-950 border-b border-slate-800/50 cursor-pointer text-left";
-                item.innerHTML = `${santri.nama.toUpperCase()} <span class="text-[9px] block opacity-50">NIK: ${santri.nik} | Kelas: ${santri.kelas}</span>`;
+                item.className = "px-4 py-3 text-xs font-bold text-slate-300 hover:bg-amber-500 hover:text-slate-950 border-b border-slate-800/50 cursor-pointer transition-colors text-left";
+                item.innerHTML = `<i class="fa-solid fa-user text-[10px] mr-1.5 opacity-60"></i> ${santri.nama.toUpperCase()} <span class="text-[9px] opacity-50 block font-mono">NIK: ${santri.nik}</span>`;
+                
+                // Jika nama diklik dari dropdown
                 item.addEventListener('click', () => {
                     document.getElementById('input-nik-terpilih').value = santri.nik;
                     document.getElementById('lbl-nama-terpilih').innerText = santri.nama.toUpperCase();
-                    document.getElementById('lbl-nik-kelas-terpilih').innerText = `NIK: ${santri.nik} | KELAS: ${santri.kelas}`;
+                    document.getElementById('lbl-nik-kelas-terpilih').innerText = `NIK SYSTEM: ${santri.nik}`;
+                    
                     document.getElementById('info-santri-terpilih').classList.remove('hidden');
                     inputCari.value = santri.nama.toUpperCase();
                     dropdownHasil.classList.add('hidden');
                 });
                 dropdownHasil.appendChild(item);
             });
+
             dropdownHasil.classList.remove('hidden');
         });
 
+        // Menutup dropdown jika klik di luar area input
+        document.addEventListener('click', (e) => {
+            if (!inputCari.contains(e.target) && !dropdownHasil.contains(e.target)) {
+                dropdownHasil.classList.add('hidden');
+            }
+        });
+
+        // =========================================================================
+        // EKSEKUSI DATA PENDAFTARAN WAJAH KE GOOGLE SHEET
+        // =========================================================================
         btnSimpan.addEventListener('click', async () => {
             let nikFinal = document.getElementById('input-nik-terpilih').value;
-            if (!nikFinal || !posisiWajahTerakhir) { alert("Nama santri belum dipilih atau wajah tidak terdeteksi kamera!"); return; }
+            let namaFinal = document.getElementById('lbl-nama-terpilih').innerText;
+            
+            if (!nikFinal) {
+                tampilkanPopUp("Pilih nama santri terlebih dahulu dari daftar!", "bg-amber-500 text-slate-950 border-amber-400");
+                return;
+            }
+            if (!posisiWajahTerakhir) {
+                tampilkanPopUp("Wajah belum terdeteksi kamera! Dekatkan posisi wajah ke kotak tengah.", "bg-red-500 text-white border-red-400");
+                return;
+            }
 
-            btnSimpan.disabled = true; btnSimpan.innerText = "MENYIMPAN...";
+            btnSimpan.disabled = true;
+            btnSimpan.innerText = "MENYIMPAN TITIK WAJAH KE GOOGLE SHEET...";
+
             const params = new URLSearchParams();
             params.append('aksi', 'daftar_wajah_saja');
             params.append('nik', nikFinal);
-            params.append('vektor', JSON.stringify(posisiWajahTerakhir));
+            params.append('vektorWajah', JSON.stringify(posisiWajahTerakhir));
 
             try {
-                let res = await fetch(API_URL, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: params.toString() });
+                let res = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: params.toString()
+                });
                 let r = await res.json();
+
                 if (r.status === "success") {
-                    alert("Berhasil mengunci wajah ke database!");
-                    inputCari.value = ""; document.getElementById('info-santri-terpilih').classList.add('hidden');
-                } else { alert("Gagal: " + r.message); }
-            } catch (err) { alert("Masalah Jaringan!"); }
-            finally { btnSimpan.disabled = false; btnSimpan.innerText = "SIMPAN KOORDINAT WAJAH"; }
+                    tampilkanPopUp(`✅ BERHASIL MENGAKTIFKAN!\nWajah asli ${namaFinal} telah dikunci ke Google Sheet.`, "bg-emerald-500 text-slate-950 border-emerald-400");
+                    
+                    // Reset Form
+                    document.getElementById('input-nik-terpilih').value = "";
+                    inputCari.value = "";
+                    document.getElementById('info-santri-terpilih').classList.add('hidden');
+                } else {
+                    tampilkanPopUp(`❌ GAGAL: ${r.message}`, "bg-red-500 text-white border-red-400");
+                }
+            } catch (err) {
+                tampilkanPopUp("Gangguan koneksi internet! Gagal menembak awan cloud Google Sheet.", "bg-red-500 text-white border-red-400");
+            } finally {
+                btnSimpan.disabled = false;
+                btnSimpan.innerText = "KUNCI & SIMPAN WAJAH ASLI";
+            }
         });
+
+        function tampilkanPopUp(pesan, temaClass) {
+            let pop = document.getElementById('pop-notif');
+            let box = document.getElementById('box-notif');
+            document.getElementById('txt-notif-msg').innerText = pesan;
+            box.className = `w-full max-w-sm p-6 rounded-3xl text-center shadow-2xl border-2 ${temaClass}`;
+            pop.classList.remove('hidden');
+            setTimeout(() => { pop.classList.add('hidden'); }, 4500);
+        }
     </script>
 </body>
 </html>
