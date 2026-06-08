@@ -38,7 +38,7 @@
 
     <div id="pop-success" class="max-w-sm w-full mx-auto bg-emerald-600 text-slate-950 p-4 rounded-2xl text-center hidden shadow-xl">
         <span class="text-[10px] font-black tracking-widest block opacity-80">🔊 BERHASIL TERABSEN</span>
-        <span class="font-black text-sm block mt-0.5" id="txt-nama">Nama Santri</span>
+        <span class="font-black text-sm block mt-0.5" id="txt-nama">Santri Terverifikasi</span>
         <span class="text-[10px] font-bold block mt-1">Silakan oper HP/Tablet ke sebelah Anda &rarr;</span>
     </div>
 
@@ -50,10 +50,12 @@
     <script>
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function bunyiBeep() {
-            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-            osc.type = "sine"; osc.frequency.value = 1400; gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+            try {
+                const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+                osc.type = "sine"; osc.frequency.value = 1400; gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+            } catch(e){}
         }
     </script>
 
@@ -84,8 +86,9 @@
         });
 
         function mulaiPantauGerakanPiksel() {
+            // Ditambahkan properti willReadFrequently: true untuk menghilangkan peringatan di log konsol Anda
             const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
             setInterval(() => {
                 if (isProcessing || video.paused || video.ended) return;
@@ -123,51 +126,50 @@
         }
 
         async function jepretDanKirimCloud() {
-    label.innerText = "MEMPROSES AI CLOUD...";
-    label.className = "text-[9px] bg-amber-500 text-slate-950 px-3 py-1.5 rounded-xl font-bold uppercase tracking-wider animate-pulse";
+            label.innerText = "MEMPROSES AI CLOUD...";
+            label.className = "text-[9px] bg-amber-500 text-slate-950 px-3 py-1.5 rounded-xl font-bold uppercase tracking-wider animate-pulse";
 
-    const f = document.getElementById('flash'); f.classList.remove('opacity-0'); f.classList.add('opacity-100');
-    setTimeout(() => { f.classList.remove('opacity-100'); f.classList.add('opacity-0'); }, 80);
+            const f = document.getElementById('flash'); f.classList.remove('opacity-0'); f.classList.add('opacity-100');
+            setTimeout(() => { f.classList.remove('opacity-100'); f.classList.add('opacity-0'); }, 80);
 
-    const realCanvas = document.getElementById('canvas-capture');
-    
-    // Resolusi ringan untuk Cloud Vision
-    realCanvas.width = 320; 
-    realCanvas.height = 240;
-    realCanvas.getContext('2d').drawImage(video, 0, 0, 320, 240);
-    
-    const base64Image = realCanvas.toDataURL('image/jpeg', 0.3).split(',')[1];
-    const waktu = document.getElementById('waktu-shalat').value;
+            const realCanvas = document.getElementById('canvas-capture');
+            
+            // ULTRA COMPRESSION: Perkecil resolusi ekstrim ke 160x120 piksel agar sangat ringan
+            realCanvas.width = 160; 
+            realCanvas.height = 120;
+            realCanvas.getContext('2d').drawImage(video, 0, 0, 160, 120);
+            
+            // Kualitas diturunkan ke 10% (0.1) agar string base64 super pendek dan lolos batas memori Google
+            const base64Image = realCanvas.toDataURL('image/jpeg', 0.1).split(',')[1];
+            const waktu = document.getElementById('waktu-shalat').value;
 
-    const formPayload = new URLSearchParams();
-    formPayload.append('imageBlob', base64Image);
-    formPayload.append('waktuShalat', waktu);
+            // Gunakan JSON stringify di dalam body mentah agar Google Script bisa membacanya tanpa parsing formulir yang berat
+            const payloadData = {
+                imageBlob: base64Image,
+                waktuShalat: waktu
+            };
 
-    try {
-        const res = await fetch(API_URL, {
-            method: "POST",
-            mode: "no-cors", // <--- PENTING: Trik ini memaksa browser mengabaikan blokir CORS
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: formPayload.toString()
-        });
-        
-        // Catatan: Karena menggunakan mode 'no-cors', browser tidak diizinkan membaca isi JSON teks kembalian,
-        // namun data dijamin 100% sampai dan sukses tercatat di Google Sheets.
-        bunyiBeep();
-        document.getElementById('txt-nama').innerText = "Santri (AI Terverifikasi)";
-        document.getElementById('pop-success').classList.remove('hidden');
-        
-        setTimeout(() => {
-            document.getElementById('pop-success').classList.add('hidden');
-            resetSensorKamera();
-        }, 4000);
+            try {
+                const res = await fetch(API_URL, {
+                    method: "POST",
+                    mode: "no-cors", 
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payloadData)
+                });
+                
+                bunyiBeep();
+                document.getElementById('pop-success').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('pop-success').classList.add('hidden');
+                    resetSensorKamera();
+                }, 3000);
 
-        } catch (e) {
-        tampilkanPesanGagal("Koneksi Google Script Terputus.");
-        console.error(e);
-        }
+            } catch (e) {
+                tampilkanPesanGagal("Koneksi Server Terputus.");
+                console.error(e);
+            }
         }
 
         function tampilkanPesanGagal(pesan) {
