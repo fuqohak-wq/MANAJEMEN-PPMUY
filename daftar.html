@@ -3,53 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pendaftaran Wajah AI Lokal - Mobile</title>
+    <title>Registrasi Geometri Kelas Terintegrasi</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { touch-action: manipulation; }
-    </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col items-center justify-between p-4">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
 
-    <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-2xl text-center flex flex-col justify-between my-auto">
+    <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-2xl text-center space-y-4">
         <div>
-            <h1 class="text-base font-black text-indigo-400 uppercase tracking-wider mb-0.5"><i class="fa-solid fa-user-plus mr-1"></i> DAFTAR WAJAH</h1>
-            <p id="info-engine" class="text-[11px] text-amber-400 font-bold animate-pulse mb-4">Mengunduh Engine AI Internal...</p>
+            <h1 class="text-base font-black text-indigo-400 uppercase tracking-wider"><i class="fa-solid fa-user-plus mr-1"></i> REGISTRASI ANGGOTA</h1>
+            <p id="info-engine" class="text-[11px] text-amber-400 font-bold animate-pulse">Mengunduh Engine AI...</p>
         </div>
 
-        <!-- FORM INPUT BESAR (Nyaman Diketik di Layar Sentuh) -->
-        <div class="space-y-3 mb-4 text-left">
-            <div>
-                <label class="text-[11px] uppercase font-black text-slate-400 tracking-wider block mb-1">Nomor Induk / NIK</label>
-                <!-- Teks diperbesar ke text-sm dan padding dipertebal -->
-                <input type="number" id="reg-nik" placeholder="Masukkan NIK Santri" class="w-full bg-slate-950 border-2 border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white outline-none focus:border-indigo-500 transition-colors">
-            </div>
-            <div>
-                <label class="text-[11px] uppercase font-black text-slate-400 tracking-wider block mb-1">Nama Lengkap Santri</label>
-                <input type="text" id="reg-nama" placeholder="Masukkan Nama Lengkap" class="w-full bg-slate-950 border-2 border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white outline-none focus:border-indigo-500 transition-colors">
+        <div class="space-y-3 text-left">
+            <input type="number" id="reg-nik" placeholder="Masukkan Nomor Induk / NIK" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs font-bold outline-none focus:border-indigo-500">
+            <input type="text" id="reg-nama" placeholder="Masukkan Nama Lengkap" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs font-bold outline-none focus:border-indigo-500">
+            
+            <div class="grid grid-cols-2 gap-2">
+                <select id="reg-status" onchange="toggleInputKelas()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-3 text-xs font-bold text-slate-300 outline-none">
+                    <option value="SANTRI">SANTRI</option>
+                    <option value="USTADZ">USTADZ</option>
+                    <option value="GURU_PDF">GURU PDF</option>
+                </select>
+                
+                <input type="text" id="reg-kelas" placeholder="Kelas (Misal: 1A)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-3 text-xs font-bold outline-none focus:border-indigo-500">
             </div>
         </div>
 
-        <!-- AREA KAMERA BULAT / OVAL PAS WAJAH -->
-        <div class="relative w-full aspect-square bg-black rounded-3xl overflow-hidden border-2 border-slate-800 mb-4 flex items-center justify-center shadow-inner">
+        <div class="relative w-full aspect-square bg-black rounded-3xl overflow-hidden border border-slate-800 flex items-center justify-center">
             <video id="video-daftar" autoplay playsinline class="w-full h-full object-cover scale-x-[-1]"></video>
-            <!-- Panduan Lingkaran diperbesar pas porsi wajah di layar HP -->
-            <div id="kotak-panduan" class="absolute w-52 h-52 border-4 border-dashed border-indigo-500/40 rounded-full pointer-events-none transition-all duration-300"></div>
+            <div id="kotak-panduan" class="absolute w-52 h-52 border-4 border-dashed border-indigo-500/30 rounded-full pointer-events-none"></div>
             <div id="flash" class="absolute inset-0 bg-white opacity-0 transition-opacity duration-100 pointer-events-none"></div>
         </div>
 
-        <!-- TOMBOL DAFTAR SANGAT BESAR -->
-        <button id="btn-jepret" disabled class="w-full bg-slate-800 text-slate-500 font-black py-4 rounded-2xl text-xs uppercase tracking-widest shadow-xl cursor-not-allowed transition-all active:scale-95">
+        <button id="btn-jepret" disabled class="w-full bg-slate-800 text-slate-500 font-black py-4 rounded-2xl text-xs uppercase tracking-widest cursor-not-allowed transition-all active:scale-95">
             Menyiapkan Kamera...
         </button>
-
-        <!-- Status teks di bawah tombol -->
-        <p id="status-reg" class="text-xs mt-3 text-slate-400 font-bold min-h-[16px]"></p>
+        <p id="status-reg" class="text-xs text-slate-400 font-bold min-h-[16px]"></p>
         
-        <div class="mt-4 pt-3 border-t border-slate-800/60 text-center">
-            <a href="index.html" class="text-xs font-black text-cyan-400 hover:underline tracking-wide"><i class="fa-solid fa-arrow-left mr-1"></i> KEMBALI KE ABSENSI</a>
+        <div class="pt-2 border-t border-slate-800 text-center">
+            <a href="index.html" class="text-xs font-black text-cyan-400 hover:underline"><i class="fa-solid fa-arrow-left mr-1"></i> KEMBALI UTAMA</a>
         </div>
     </div>
 
@@ -61,93 +55,57 @@
         let infoEngine = document.getElementById('info-engine');
         let kotakPanduan = document.getElementById('kotak-panduan');
 
+        function toggleInputKelas() {
+            let st = document.getElementById('reg-status').value;
+            let inp = document.getElementById('reg-kelas');
+            if(st === "SANTRI") { inp.disabled = false; inp.placeholder = "Kelas (Misal: 1A)"; } 
+            else { inp.disabled = true; inp.value = "-"; }
+        }
+
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 await faceapi.nets.tinyFaceDetector.loadFromUri('https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights');
                 await faceapi.nets.faceLandmark68Net.loadFromUri('https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights');
-                
-                infoEngine.innerText = "🟢 Engine AI Sukses Terpasang";
-                infoEngine.className = "text-[11px] text-emerald-400 font-bold mb-4";
-
+                infoEngine.innerText = "🟢 Engine AI Siap"; infoEngine.className = "text-[11px] text-emerald-400 font-bold";
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
                 video.srcObject = stream;
-                
-                btnJepret.disabled = false;
-                btnJepret.innerText = "KUNCI WAJAH SEKARANG";
-                btnJepret.className = "w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-4 rounded-2xl text-xs uppercase tracking-widest shadow-xl cursor-pointer transition-all active:scale-95";
+                btnJepret.disabled = false; btnJepret.innerText = "KUNCI ANGGOTA BARU";
+                btnJepret.className = "w-full bg-indigo-600 text-white font-black py-4 rounded-2xl text-xs uppercase tracking-widest shadow-xl";
                 
                 setInterval(async () => {
                     const deteksi = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 128, scoreThreshold: 0.5 }));
-                    if(deteksi) {
-                        kotakPanduan.className = "absolute w-52 h-52 border-4 border-solid border-emerald-400 rounded-full pointer-events-none bg-emerald-500/5 scale-105 animate-pulse";
-                    } else {
-                        kotakPanduan.className = "absolute w-52 h-52 border-4 border-dashed border-indigo-500/30 rounded-full pointer-events-none";
-                    }
+                    kotakPanduan.className = deteksi ? "absolute w-52 h-52 border-4 border-solid border-emerald-400 rounded-full bg-emerald-500/5 animate-pulse" : "absolute w-52 h-52 border-4 border-dashed border-indigo-500/30 rounded-full";
                 }, 400);
-
-            } catch (e) {
-                statusReg.innerText = "Gagal memulai sistem kamera.";
-                statusReg.className = "text-xs mt-3 text-red-400 font-bold";
-            }
+            } catch (e) { statusReg.innerText = "Gagal memuat kamera."; }
         });
 
         btnJepret.addEventListener('click', async () => {
             let nik = document.getElementById('reg-nik').value.trim();
             let nama = document.getElementById('reg-nama').value.trim();
+            let statusUser = document.getElementById('reg-status').value;
+            let kelas = document.getElementById('reg-kelas').value.trim() || "-";
 
-            if (!nik || !nama) {
-                alert("Mohon isi NIK dan Nama lengkap!");
-                return;
-            }
-
-            btnJepret.disabled = true;
-            statusReg.innerText = "Membaca struktur geometris wajah...";
-            statusReg.className = "text-xs mt-3 text-amber-400 font-bold animate-pulse";
-
-            const f = document.getElementById('flash'); f.classList.remove('opacity-0'); f.classList.add('opacity-100');
-            setTimeout(() => { f.classList.remove('opacity-100'); f.classList.add('opacity-0'); }, 80);
+            if (!nik || !nama) { alert("Mohon isi NIK dan Nama!"); return; }
+            btnJepret.disabled = true; statusReg.innerText = "Mengunci data...";
 
             const hasilAI = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 128, scoreThreshold: 0.5 })).withFaceLandmarks();
+            if (!hasilAI) { alert("Wajah tidak terbaca jelas!"); btnJepret.disabled = false; return; }
 
-            if (!hasilAI) {
-                statusReg.innerText = "Wajah tidak terbaca. Posisikan pas di tengah bulatan.";
-                statusReg.className = "text-xs mt-3 text-red-400 font-bold";
-                btnJepret.disabled = false;
-                return;
-            }
+            const fp = new URLSearchParams();
+            fp.append('aksi', 'daftar');
+            fp.append('nik', nik);
+            fp.append('nama', nama);
+            fp.append('statusUser', statusUser);
+            fp.append('kelas', kelas.toUpperCase());
+            fp.append('vektorWajah', JSON.stringify(hasilAI.landmarks.positions));
 
-            const stringKoordinatWajah = JSON.stringify(hasilAI.landmarks.positions);
-            statusReg.innerText = "Mengunci data ke Google Cloud Sheets...";
-            
-            const formPayload = new URLSearchParams();
-            formPayload.append('aksi', 'daftar');
-            formPayload.append('nik', nik);
-            formPayload.append('nama', nama);
-            formPayload.append('vektorWajah', stringKoordinatWajah);
-
-            try {
-                const res = await fetch(API_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: formPayload.toString()
-                });
-                const r = await res.json();
-
-                if (r.status === "success") {
-                    statusReg.innerText = "🎉 Sukses! Wajah Anda Sudah Terkunci.";
-                    statusReg.className = "text-xs mt-3 text-emerald-400 font-bold";
-                    document.getElementById('reg-nik').value = "";
-                    document.getElementById('reg-nama').value = "";
-                } else {
-                    statusReg.innerText = r.message;
-                    statusReg.className = "text-xs mt-3 text-red-400 font-bold";
-                }
-            } catch (e) {
-                statusReg.innerText = "Eror jaringan. Silakan coba lagi.";
-                statusReg.className = "text-xs mt-3 text-red-400 font-bold";
-            } finally {
-                btnJepret.disabled = false;
-            }
+            const res = await fetch(API_URL, { method: "POST", body: fp.toString() });
+            const r = await res.json();
+            if (r.status === "success") {
+                statusReg.innerText = "🎉 Berhasil Didaftarkan!";
+                document.getElementById('reg-nik').value = ""; document.getElementById('reg-nama').value = "";
+            } else { statusReg.innerText = r.message; }
+            btnJepret.disabled = false;
         });
     </script>
 </body>
