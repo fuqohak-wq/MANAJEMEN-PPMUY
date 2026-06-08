@@ -44,6 +44,7 @@
         
         window.addEventListener('DOMContentLoaded', async () => {
             try {
+                // Tarik via GET aman bypass CORS
                 let res = await fetch(`${API_URL}?aksi=ambil_database`, { method: "GET" });
                 let json = await res.json();
                 
