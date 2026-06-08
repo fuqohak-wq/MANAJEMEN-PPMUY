@@ -61,7 +61,7 @@
 
     <script>
         // =========================================================================
-        // URL EXEC WEB APP GOOGLE SCRIPT ANDA
+        // WAJIB: Pastikan URL /exec terbaru Anda ditempel di bawah ini!
         // =========================================================================
         const API_URL = "https://script.google.com/macros/s/AKfycbwR-Ml0M6mCXj2yc_E0Ihll3V3HIDlithCuMYvIsxSrtZdhVDJNMFZ5WKb657o8di5x/exec";
         
@@ -86,7 +86,6 @@
         });
 
         function mulaiPantauGerakanPiksel() {
-            // Ditambahkan properti willReadFrequently: true untuk menghilangkan peringatan di log konsol Anda
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
@@ -133,41 +132,45 @@
             setTimeout(() => { f.classList.remove('opacity-100'); f.classList.add('opacity-0'); }, 80);
 
             const realCanvas = document.getElementById('canvas-capture');
-            
-            // ULTRA COMPRESSION: Perkecil resolusi ekstrim ke 160x120 piksel agar sangat ringan
             realCanvas.width = 160; 
             realCanvas.height = 120;
             realCanvas.getContext('2d').drawImage(video, 0, 0, 160, 120);
             
-            // Kualitas diturunkan ke 10% (0.1) agar string base64 super pendek dan lolos batas memori Google
-            const base64Image = realCanvas.toDataURL('image/jpeg', 0.1).split(',')[1];
+            const base64Image = realCanvas.toDataURL('image/jpeg', 0.2).split(',')[1];
             const waktu = document.getElementById('waktu-shalat').value;
 
-            // Gunakan JSON stringify di dalam body mentah agar Google Script bisa membacanya tanpa parsing formulir yang berat
-            const payloadData = {
-                imageBlob: base64Image,
-                waktuShalat: waktu
-            };
+            // Menggunakan format x-www-form-urlencoded murni untuk stabilitas transfer Google
+            const formPayload = new URLSearchParams();
+            formPayload.append('imageBlob', base64Image);
+            formPayload.append('waktuShalat', waktu);
 
             try {
+                // HAPUS mode no-cors agar kita bisa membaca respon asli dari Google (apakah sukses/gagal)
                 const res = await fetch(API_URL, {
                     method: "POST",
-                    mode: "no-cors", 
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/x-www-form-urlencoded"
                     },
-                    body: JSON.stringify(payloadData)
+                    body: formPayload.toString()
                 });
                 
-                bunyiBeep();
-                document.getElementById('pop-success').classList.remove('hidden');
-                setTimeout(() => {
-                    document.getElementById('pop-success').classList.add('hidden');
-                    resetSensorKamera();
-                }, 3000);
+                const r = await res.json();
+
+                if (r.status === "success") {
+                    bunyiBeep();
+                    document.getElementById('txt-nama').innerText = r.nama || "Santri Terverifikasi";
+                    document.getElementById('pop-success').classList.remove('hidden');
+                    setTimeout(() => {
+                        document.getElementById('pop-success').classList.add('hidden');
+                        resetSensorKamera();
+                    }, 4000);
+                } else {
+                    tampilkanPesanGagal(r.message || "Wajah tidak terdaftar.");
+                }
 
             } catch (e) {
-                tampilkanPesanGagal("Koneksi Server Terputus.");
+                // Catatan: Jika ada masalah CORS, baris ini yang akan menangkapnya sekarang.
+                tampilkanPesanGagal("Koneksi Google Script Terputus / CORS Block.");
                 console.error(e);
             }
         }
