@@ -3,60 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Core - E-Pesantren</title>
+    <title>Dashboard Core & Rekap - E-Pesantren</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .royal-card { background: linear-gradient(135deg, #1e3a8a 0%, #0d9488 100%); border: 3px solid #facc15; box-shadow: 0 10px 25px rgba(30, 58, 138, 0.15); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .royal-card { background: linear-gradient(135deg, #1e3a8a 0%, #0d9488 100%); border: 3px solid #facc15; box-shadow: 0 10px 25px rgba(30, 58, 138, 0.15); transition: all 0.3s ease; }
         .royal-card:hover { transform: translateY(-4px); }
-        .gold-card { background: linear-gradient(135deg, #facc15 0%, #eab308 100%); border: 3px solid #1e3a8a; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .gold-card { background: linear-gradient(135deg, #facc15 0%, #eab308 100%); border: 3px solid #1e3a8a; transition: all 0.3s ease; }
         .gold-card:hover { transform: translateY(-4px); }
         @media print { body * { visibility: hidden; } #area-cetak-pdf, #area-cetak-pdf * { visibility: visible; } #area-cetak-pdf { position: absolute; left: 0; top: 0; width: 100%; } .no-print { display: none !important; } }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col justify-between">
 
-    <header class="w-full bg-indigo-900 border-b-4 border-yellow-400 px-6 py-4 flex justify-between items-center shadow-md no-print">
+    <header class="w-full bg-slate-950 border-b-4 border-yellow-400 px-6 py-4 flex justify-between items-center shadow-md no-print">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-yellow-400 flex items-center justify-center"><i class="fa-solid fa-mosque text-indigo-900"></i></div>
+            <div class="w-10 h-10 rounded-xl bg-yellow-400 flex items-center justify-center"><i class="fa-solid fa-mosque text-slate-950"></i></div>
             <div>
                 <h1 id="txt-user-nama" class="text-sm font-black tracking-wide text-yellow-300 uppercase">LOAD...</h1>
                 <span id="badge-role" class="text-[9px] bg-yellow-400 text-indigo-950 px-2 py-0.5 rounded-full font-black tracking-widest block w-max uppercase">ROLE</span>
             </div>
         </div>
-        <button onclick="prosesLogout()" class="w-10 h-10 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-indigo-950 flex items-center justify-center cursor-pointer border-2 border-white shadow-md transition-all"><i class="fa-solid fa-right-from-bracket"></i></button>
+        <div class="flex items-center gap-2">
+            <button onclick="muatSeluruhRekapDashboard()" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-400 flex items-center justify-center cursor-pointer transition-all border border-slate-700 shadow" title="Refresh Rekap"><i class="fa-solid fa-rotate"></i></button>
+            <button onclick="prosesLogout()" class="w-10 h-10 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-indigo-950 flex items-center justify-center cursor-pointer border-2 border-white shadow-md transition-all"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </div>
     </header>
 
-    <main class="max-w-6xl w-full mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6 my-auto no-print">
-        <div class="royal-card rounded-2xl p-5 flex flex-col justify-between aspect-[1.5/1]">
-            <div class="w-10 h-10 bg-yellow-400 rounded-xl flex items-center justify-center"><i class="fa-solid fa-camera text-indigo-900"></i></div>
-            <div class="mt-2">
-                <h2 class="text-base font-black text-yellow-300 uppercase">Daftar Wajah Santri</h2>
-                <p class="text-[11px] text-white font-medium mt-0.5">Input koordinat landmark struktur wajah santri ke master_santri.</p>
+    <div class="max-w-6xl w-full mx-auto p-6 flex flex-col gap-8 flex-1">
+        
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 no-print">
+            <div class="royal-card rounded-2xl p-5 flex flex-col justify-between aspect-[1.7/1]">
+                <div class="w-10 h-10 bg-yellow-400 rounded-xl flex items-center justify-center"><i class="fa-solid fa-camera text-indigo-900"></i></div>
+                <div class="mt-2">
+                    <h2 class="text-base font-black text-yellow-300 uppercase">Daftar Wajah Santri</h2>
+                    <p class="text-[11px] text-white font-medium mt-0.5">Input koordinat landmark struktur wajah santri ke master_santri.</p>
+                </div>
+                <a href="daftarwajah.html" class="text-xs font-black text-yellow-400 flex items-center gap-1 uppercase tracking-widest mt-2">BUKA MENU <i class="fa-solid fa-circle-arrow-right"></i></a>
             </div>
-            <a href="daftarwajah.html" class="text-xs font-black text-yellow-400 flex items-center gap-1 uppercase tracking-widest mt-2">BUKA MENU <i class="fa-solid fa-circle-arrow-right"></i></a>
-        </div>
 
-        <div class="royal-card rounded-2xl p-5 flex flex-col justify-between aspect-[1.5/1]">
-            <div class="w-10 h-10 bg-yellow-400 rounded-xl flex items-center justify-center"><i class="fa-solid fa-face-viewfinder text-indigo-900"></i></div>
-            <div class="mt-2">
-                <h2 class="text-base font-black text-yellow-300 uppercase">Absensi Scan Wajah</h2>
-                <p class="text-[11px] text-white font-medium mt-0.5">Terminal Kiosk otomatis pencocokan wajah kegiatan jamaah.</p>
+            <div class="royal-card rounded-2xl p-5 flex flex-col justify-between aspect-[1.7/1]">
+                <div class="w-10 h-10 bg-yellow-400 rounded-xl flex items-center justify-center"><i class="fa-solid fa-face-viewfinder text-indigo-900"></i></div>
+                <div class="mt-2">
+                    <h2 class="text-base font-black text-yellow-300 uppercase">Absensi Scan Wajah</h2>
+                    <p class="text-[11px] text-white font-medium mt-0.5">Terminal Kiosk otomatis pencocokan wajah kegiatan jamaah.</p>
+                </div>
+                <a href="scan-wajah.html" class="text-xs font-black text-yellow-400 flex items-center gap-1 uppercase tracking-widest mt-2">BUKA ALAT <i class="fa-solid fa-circle-arrow-right"></i></a>
             </div>
-            <a href="scan-wajah.html" class="text-xs font-black text-yellow-400 flex items-center gap-1 uppercase tracking-widest mt-2">BUKA ALAT <i class="fa-solid fa-circle-arrow-right"></i></a>
-        </div>
 
-        <div class="gold-card rounded-2xl p-5 flex flex-col justify-between aspect-[1.5/1]">
-            <div class="w-10 h-10 bg-indigo-900 rounded-xl flex items-center justify-center"><i class="fa-solid fa-graduation-cap text-yellow-400"></i></div>
-            <div class="mt-2">
-                <h2 class="text-base font-black text-indigo-950 uppercase">Absen Guru PDF</h2>
-                <p class="text-[11px] text-indigo-900 font-bold mt-0.5">Filter jadwal mengajar. Sekali klik langsung hilang masuk log sekolah.</p>
+            <div class="gold-card rounded-2xl p-5 flex flex-col justify-between aspect-[1.7/1]">
+                <div class="w-10 h-10 bg-indigo-900 rounded-xl flex items-center justify-center"><i class="fa-solid fa-graduation-cap text-yellow-400"></i></div>
+                <div class="mt-2">
+                    <h2 class="text-base font-black text-indigo-950 uppercase">Absen Guru PDF</h2>
+                    <p class="text-[11px] text-indigo-900 font-bold mt-0.5">Filter jadwal mengajar. Sekali klik langsung hilang masuk log sekolah.</p>
+                </div>
+                <button onclick="bukaModalGuru()" class="text-xs font-black text-indigo-950 flex items-center gap-1 uppercase tracking-widest mt-2 text-left cursor-pointer">BUKA PANEL <i class="fa-solid fa-circle-arrow-right"></i></button>
             </div>
-            <button onclick="bukaModalGuru()" class="text-xs font-black text-indigo-950 flex items-center gap-1 uppercase tracking-widest mt-2 text-left cursor-pointer">BUKA PANEL <i class="fa-solid fa-circle-arrow-right"></i></button>
-        </div>
-    </main>
+        </section>
 
-    <div id="modal-guru" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden">
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 no-print border-t border-slate-800 pt-6">
+            
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 text-center">
+                        <span class="text-[10px] font-black text-slate-400 tracking-wider block uppercase">TOTAL SANTRI</span>
+                        <span id="stat-total" class="text-xl font-black text-white mt-1 block">...</span>
+                    </div>
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 text-center border-l-4 border-l-emerald-500">
+                        <span class="text-[10px] font-black text-emerald-400 tracking-wider block uppercase">SUDAH FOTO</span>
+                        <span id="stat-sudah" class="text-xl font-black text-white mt-1 block">...</span>
+                    </div>
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 text-center border-l-4 border-l-amber-500">
+                        <span class="text-[10px] font-black text-amber-400 tracking-wider block uppercase">BELUM FOTO</span>
+                        <span id="stat-belum" class="text-xl font-black text-white mt-1 block">...</span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5">
+                    <h3 class="text-xs font-black text-cyan-400 uppercase tracking-widest mb-4 flex items-center gap-1.5"><i class="fa-solid fa-chart-simple"></i> SCAN JAMAAH SHALAT HARI INI</h3>
+                    <div class="grid grid-cols-5 gap-2 text-center">
+                        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl">
+                            <span class="text-[9px] font-black text-slate-400 block uppercase">SUBUH</span>
+                            <span id="v-subuh" class="text-lg font-black text-white block mt-1">0</span>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl">
+                            <span class="text-[9px] font-black text-slate-400 block uppercase">DZUHUR</span>
+                            <span id="v-dzuhur" class="text-lg font-black text-white block mt-1">0</span>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl">
+                            <span class="text-[9px] font-black text-slate-400 block uppercase">ASHAR</span>
+                            <span id="v-ashar" class="text-lg font-black text-white block mt-1">0</span>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl">
+                            <span class="text-[9px] font-black text-slate-400 block uppercase">MAGHRIB</span>
+                            <span id="v-maghrib" class="text-lg font-black text-white block mt-1">0</span>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl">
+                            <span class="text-[9px] font-black text-slate-400 block uppercase">ISYA</span>
+                            <span id="v-isya" class="text-lg font-black text-white block mt-1">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 flex flex-col max-h-60">
+                    <h3 class="text-xs font-black text-amber-400 uppercase tracking-widest mb-3"><i class="fa-solid fa-triangle-exclamation"></i> DAFTAR SANTRI BELUM DAFTAR WAJAH</h3>
+                    <div class="overflow-y-auto flex-1 pr-1">
+                        <table class="w-full text-left text-[11px]">
+                            <thead>
+                                <tr class="border-b border-slate-800 text-slate-400 font-black uppercase">
+                                    <th class="py-2">NAMA SANTRI</th>
+                                    <th class="py-2 text-right">KELAS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbl-belum-foto-body" class="divide-y divide-slate-900 font-bold text-slate-300">
+                                <tr><td colspan="2" class="py-3 text-center text-slate-500">Memuat data santri...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 flex flex-col h-full min-h-80 max-h-[460px]">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-xs font-black text-emerald-400 uppercase tracking-widest flex items-center gap-1.5"><i class="fa-solid fa-satellite-dish animate-pulse"></i> LIVE KIOSK TRACKER</h3>
+                    <span class="text-[9px] bg-emerald-500/10 text-emerald-400 font-black px-2 py-0.5 rounded-full uppercase tracking-wider">HARI INI</span>
+                </div>
+                <div id="box-live-feed" class="flex flex-col gap-2 overflow-y-auto flex-1 pr-1">
+                    <div class="text-center text-xs py-6 text-slate-500 font-bold uppercase tracking-wider">Menghubungkan ke terminal kiosk...</div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <div id="modal-guru" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md hidden">
         <div id="area-cetak-pdf" class="bg-white border-4 border-indigo-900 w-full max-w-2xl rounded-3xl p-6 flex flex-col max-h-[85vh] shadow-2xl">
             <div class="flex justify-between items-center mb-4 border-b-2 border-indigo-100 pb-2">
                 <h3 class="font-black text-base text-indigo-900 uppercase tracking-wider"><i class="fa-solid fa-chalkboard-user mr-1"></i> JADWAL JURUSAN GURUPDF</h3>
@@ -94,7 +175,7 @@
         </div>
     </div>
 
-    <footer class="w-full text-center py-3 text-[10px] text-indigo-900 font-extrabold tracking-widest border-t-2 border-indigo-100 bg-white no-print">E-PESANTREN CORE ECOSYSTEM</footer>
+    <footer class="w-full text-center py-3 text-[10px] text-slate-500 font-extrabold tracking-widest border-t border-slate-800 bg-slate-950 no-print">E-PESANTREN CORE ECOSYSTEM</footer>
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwR-Ml0M6mCXj2yc_E0Ihll3V3HIDlithCuMYvIsxSrtZdhVDJNMFZ5WKb657o8di5x/exec";
@@ -105,12 +186,81 @@
             if (!nama || !role) { window.location.href = "index.html"; return; }
             document.getElementById('txt-user-nama').innerText = nama;
             document.getElementById('badge-role').innerText = role;
+
+            // Picu pengambilan data rekap otomatis sesaat setelah admin masuk dashboard
+            muatSeluruhRekapDashboard();
         });
 
         function bukaModalGuru() { document.getElementById('modal-guru').classList.remove('hidden'); }
         function tutupModalGuru() { document.getElementById('modal-guru').classList.add('hidden'); }
         function prosesLogout() { localStorage.clear(); window.location.href = "index.html"; }
 
+        // =========================================================================
+        // [FITUR BARU] SINKRONISASI ASINKRONUS DATA REKAP & MONITORING FEED
+        // =========================================================================
+        async function muatSeluruhRekapDashboard() {
+            const feedBox = document.getElementById('box-live-feed');
+            const tblBody = document.getElementById('tbl-belum-foto-body');
+            
+            try {
+                // Menarik data rekap dengan metode GET murni (Meluncur mulus anti CORS)
+                let res = await fetch(`${API_URL}?aksi=ambil_rekap_dashboard`, { method: "GET" });
+                let r = await res.json();
+
+                if (r.status === "success") {
+                    // 1. Pasang Angka Statistik Biometrik
+                    document.getElementById('stat-total').innerText = r.rekapWajah.total;
+                    document.getElementById('stat-sudah').innerText = r.rekapWajah.sudah;
+                    document.getElementById('stat-belum').innerText = r.rekapWajah.belum;
+
+                    // 2. Pasang Statistik Shalat Hari Ini
+                    document.getElementById('v-subuh').innerText = r.rekapShalat.Subuh;
+                    document.getElementById('v-dzuhur').innerText = r.rekapShalat.Dzuhur;
+                    document.getElementById('v-ashar').innerText = r.rekapShalat.Ashar;
+                    document.getElementById('v-maghrib').innerText = r.rekapShalat.Maghrib;
+                    document.getElementById('v-isya').innerText = r.rekapShalat.Isya;
+
+                    // 3. Bangun Tabel Daftar Santri Belum Foto
+                    tblBody.innerHTML = '';
+                    if (r.rekapWajah.listBelum.length === 0) {
+                        tblBody.innerHTML = `<tr><td colspan="2" class="py-3 text-center text-emerald-400 uppercase font-bold">Semua Wajah Santri Sudah Terkunci!</td></tr>`;
+                    } else {
+                        r.rekapWajah.listBelum.forEach(s => {
+                            let row = document.createElement('tr');
+                            row.className = "border-b border-slate-900/50 hover:bg-slate-900/30";
+                            row.innerHTML = `<td class="py-2.5 text-slate-300 font-bold uppercase">${s.nama}</td><td class="py-2.5 text-right font-mono text-slate-400">${s.kelas}</td>`;
+                            tblBody.appendChild(row);
+                        });
+                    }
+
+                    // 4. Bangun Log Live Kiosk Tracker Feed
+                    feedBox.innerHTML = '';
+                    if (r.liveFeed.length === 0) {
+                        feedBox.innerHTML = `<div class="text-center text-[11px] py-10 text-slate-500 font-bold uppercase">Belum ada santri melakukan scan hari ini.</div>`;
+                    } else {
+                        r.liveFeed.forEach(log => {
+                            let div = document.createElement('div');
+                            div.className = "bg-slate-900 border border-slate-800 p-3 rounded-xl flex justify-between items-center text-[11px] font-bold shadow-sm animate-fade-in";
+                            div.innerHTML = `
+                                <div class="flex flex-col gap-0.5">
+                                    <span class="text-white uppercase tracking-wide">${log.nama}</span>
+                                    <span class="text-[9px] text-slate-400">Petugas Kiosk: <span class="text-amber-400">${log.petugas}</span></span>
+                                </div>
+                                <div class="text-right flex flex-col gap-0.5">
+                                    <span class="bg-emerald-500/10 text-emerald-400 font-black px-2 py-0.5 rounded-md text-[9px] uppercase tracking-wider block w-max ml-auto">${log.shalat}</span>
+                                    <span class="text-[9px] text-slate-500 font-mono mt-0.5 block">${log.jam} WIB</span>
+                                </div>
+                            `;
+                            feedBox.appendChild(div);
+                        });
+                    }
+                }
+            } catch(e) {
+                feedBox.innerHTML = `<div class="text-center text-xs py-4 text-red-500 font-bold uppercase">Koneksi dashboard rekap terputus.</div>`;
+            }
+        }
+
+        // [FUNGSI LAMA] Ambil Jadwal Guru PDF (LAMA & TETAP UTUH)
         async function muatDataGuruPDF() {
             const loader = document.getElementById('loader-guru');
             const box = document.getElementById('box-daftar-guru');
@@ -120,7 +270,6 @@
             const jam = document.getElementById('g-jam').value;
             const gender = document.getElementById('g-gender').value;
 
-            // Menggunakan METODE GET murni (ditempel di URL) untuk tarik data demi mencegah CORS Block di Vercel
             const urlAmbil = `${API_URL}?aksi=ambil_guru_pdf&hari=${encodeURIComponent(hari)}&jam=${encodeURIComponent(jam)}&gender=${encodeURIComponent(gender)}`;
 
             try {
@@ -133,7 +282,6 @@
                         btn.className = "bg-indigo-50 hover:bg-red-100 text-indigo-950 font-black p-4 rounded-xl border border-indigo-200 text-xs flex flex-col justify-center items-center gap-1 cursor-pointer text-center duration-300 shadow-sm transition-all transform hover:scale-95";
                         btn.innerHTML = `<i class="fa-solid fa-user-tie text-base text-indigo-900 opacity-60"></i><span>${guru.nama.toUpperCase()}</span><span class="text-[9px] text-indigo-700 font-mono">${guru.mapel} (${guru.kelas})</span>`;
                         
-                        // KLIK LANGSUNG HILANG & MASUK DATABASE absensi_sekolah
                         btn.addEventListener('click', async () => {
                             btn.disabled = true; btn.innerText = "MENCATAT...";
                             
@@ -149,9 +297,8 @@
                                 let resAbsen = await fetch(API_URL, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: paramsAbsen.toString() });
                                 let rAbsen = await resAbsen.json();
                                 if(rAbsen.status === "success") {
-                                    btn.style.transform = "scale(0)";
-                                    btn.style.opacity = "0";
-                                    setTimeout(() => { btn.remove(); }, 300);
+                                    btn.style.transform = "scale(0)"; btn.style.opacity = "0";
+                                    setTimeout(() => { btn.remove(); muatSeluruhRekapDashboard(); }, 300);
                                 } else { alert("Gagal catat."); btn.disabled = false; }
                             } catch(e) { alert("Masalah jaringan!"); btn.disabled = false; }
                         });
