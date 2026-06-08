@@ -101,7 +101,11 @@
             fp.append('username', u);
             fp.append('password', p);
 
-            const res = await fetch(API_URL, { method: "POST", body: fp.toString() });
+            const res = await fetch(API_URL, { 
+                method: "POST", 
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: fp.toString() 
+            });
             const r = await res.json();
             if(r.status === "success") {
                 document.getElementById('box-login-admin').classList.add('hidden');
@@ -124,7 +128,11 @@
             fp.append('kegiatan', kegiatan);
             fp.append('kelas', kelas);
 
-            const res = await fetch(API_URL, { method: "POST", body: fp.toString() });
+            const res = await fetch(API_URL, { 
+                method: "POST", 
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: fp.toString() 
+            });
             const r = await res.json();
             
             if(r.status === "success" && r.data.length > 0) {
@@ -144,7 +152,11 @@
                         fpAbsen.append('petugas', "KEPALA_PONDOK_MANUAL");
 
                         try {
-                            let resA = await fetch(API_URL, { method: "POST", body: fpAbsen.toString() });
+                            let resA = await fetch(API_URL, { 
+                                method: "POST", 
+                                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                                body: fpAbsen.toString() 
+                            });
                             let rA = await resA.json();
                             if(rA.status === "success" || rA.status === "terabsen") {
                                 btn.remove();
