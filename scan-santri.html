@@ -58,7 +58,7 @@
 
     <div id="pop-failed" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-6 hidden z-50">
         <div class="bg-red-500 text-white w-full max-w-sm p-6 rounded-3xl text-center shadow-2xl border-2 border-red-400">
-            <div class="w-16 h-16 bg-slate-950 rounded-full flex items-center justify-center mx-auto mb-3"><i class="fa-solid fa-xmark text-red-500 text-2xl"></i></div>
+            <div class="w-16 h-16 bg-slate-950 rounded-full flex items-center justify-center mx-auto mb-3"><i class="fa-solid fa-xmark text-white text-2xl"></i></div>
             <span class="text-xs font-black tracking-widest block opacity-75" id="title-gagal">❌ ABSENSI GAGAL</span>
             <span class="font-black text-sm block mt-1" id="txt-failed-reason">Wajah Tidak Dikenal</span>
         </div>
@@ -87,11 +87,11 @@
 
         window.addEventListener('DOMContentLoaded', async () => {
             try {
-                // Mengambil bobot model face-api dari server CDN unpkg publik yang anti-lelet dan anti-blokir
+                // Memuat struktur data geometri wajah dari CDN alternatif terpercaya unpkg
                 await faceapi.nets.tinyFaceDetector.loadFromUri('https://unpkg.com/@vladmandic/face-api/model');
                 await faceapi.nets.faceLandmark68Net.loadFromUri('https://unpkg.com/@vladmandic/face-api/model');
                 
-                // Menembak database via jalur aman doGet (Anti-CORS)
+                // Menembak database via perintah GET aman (Anti-CORS)
                 const res = await fetch(`${API_URL}?aksi=ambil_database`, { method: "GET" });
                 const json = await res.json();
                 
@@ -100,13 +100,14 @@
                     dbStatus.innerText = `🟢 ${databaseSantri.length} Santri`;
                     dbStatus.className = "text-[11px] text-emerald-400 font-bold";
                 }
-                
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
                 video.srcObject = stream;
                 label.innerText = "HADAPKAN WAJAH";
                 mulaiKioskScanLokal();
             } catch (e) { 
-                label.innerText = "ERROR MODEL";
+                label.innerText = "🔴 ERROR INTEGRASI: Failed to fetch";
+                dbStatus.innerText = "Gagal Ambil Data";
+                dbStatus.className = "text-[11px] text-red-500 font-bold";
                 console.error(e);
             }
         });
@@ -150,7 +151,7 @@
                 try {
                     let res = await fetch(API_URL, { 
                         method: "POST", 
-                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        headers: { "Content-Type": "https://script.google.com/macros/s/AKfycbwR-Ml0M6mCXj2yc_E0Ihll3V3HIDlithCuMYvIsxSrtZdhVDJNMFZ5WKb657o8di5x/exec" },
                         body: fp.toString() 
                     });
                     let r = await res.json();
@@ -159,23 +160,24 @@
                         bunyiBeep(1100);
                         document.getElementById('txt-nama-sukses').innerText = santriDitemukan.nama;
                         document.getElementById('pop-success').classList.remove('hidden');
-                        setTimeout(() => { document.getElementById('pop-success').classList.add('hidden'); isProcessing = false; }, 3000);
+                        setTimeout(() => { document.getElementById('pop-success').classList.add('hidden'); isProcessing = false; label.innerText = "HADAPKAN WAJAH"; kotakScan.className = "w-64 h-64 border-4 border-dashed border-cyan-500/40 rounded-3xl flex items-center justify-center transition-all duration-300"; }, 3000);
                     } else {
                         bunyiBeep(400);
                         document.getElementById('title-gagal').innerText = "❌ SISTEM MENOLAK";
                         document.getElementById('txt-failed-reason').innerText = r.message;
                         document.getElementById('pop-failed').classList.remove('hidden');
-                        setTimeout(() => { document.getElementById('pop-failed').classList.add('hidden'); isProcessing = false; }, 3500);
+                        setTimeout(() => { document.getElementById('pop-failed').classList.add('hidden'); isProcessing = false; label.innerText = "HADAPKAN WAJAH"; kotakScan.className = "w-64 h-64 border-4 border-dashed border-cyan-500/40 rounded-3xl flex items-center justify-center transition-all duration-300"; }, 3500);
                     }
                 } catch(e) { 
                     isProcessing = false; 
+                    label.innerText = "HADAPKAN WAJAH";
                 }
             } else {
                 bunyiBeep(400);
                 document.getElementById('title-gagal').innerText = "❌ ABSENSI GAGAL";
                 document.getElementById('txt-failed-reason').innerText = "Wajah Tidak Dikenal";
                 document.getElementById('pop-failed').classList.remove('hidden');
-                setTimeout(() => { document.getElementById('pop-failed').classList.add('hidden'); isProcessing = false; }, 2000);
+                setTimeout(() => { document.getElementById('pop-failed').classList.add('hidden'); isProcessing = false; label.innerText = "HADAPKAN WAJAH"; kotakScan.className = "w-64 h-64 border-4 border-dashed border-cyan-500/40 rounded-3xl flex items-center justify-center transition-all duration-300"; }, 2000);
             }
         }
 
