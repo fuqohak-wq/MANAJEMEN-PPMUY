@@ -45,7 +45,6 @@
 </head>
 <body class="bright-premium-bg text-slate-800 font-sans min-h-screen flex flex-col justify-between">
 
-  <!-- HEADER NAVBAR -->
   <header class="w-full bg-indigo-900 border-b-4 border-yellow-400 px-6 py-4 flex justify-between items-center shadow-md">
     <div class="flex items-center gap-4">
       <div class="w-12 h-12 rounded-xl bg-yellow-400 flex items-center justify-center shadow-md">
@@ -66,7 +65,6 @@
     </div>
   </header>
 
-  <!-- LIVE REAL-TIME DATA HUB MONITOR (NEW BOARD) -->
   <section class="max-w-7xl w-full mx-auto px-6 pt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
     <div class="bg-white p-4 rounded-2xl border-2 border-indigo-900 shadow-sm">
       <h3 class="text-xs font-black text-indigo-900 uppercase tracking-wider mb-2 flex items-center gap-1">
@@ -82,9 +80,7 @@
     </div>
   </section>
 
-  <!-- CONTAINER GRID MENU UTAMA -->
   <main class="max-w-7xl w-full mx-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-auto">
-    <!-- CARD 1: REGISTRASI WAJAH -->
     <div id="box-registrasi" class="royal-card rounded-[2rem] p-6 flex flex-col justify-between aspect-[1.7/1] group cursor-pointer">
       <div class="w-12 h-12 bg-yellow-400 rounded-2xl flex items-center justify-center shadow-md"><i class="fa-solid fa-camera text-indigo-900 text-xl"></i></div>
       <div class="mt-4">
@@ -94,7 +90,6 @@
       <a href="daftarwajah.html" class="text-xs font-black text-yellow-400 group-hover:text-white flex items-center gap-2 uppercase tracking-widest mt-4">BUKA ALAT <i class="fa-solid fa-circle-arrow-right animate-pulse"></i></a>
     </div>
 
-    <!-- CARD 2: ABSENSI KELAS MADRASAH -->
     <div id="box-madrasah" class="gold-card rounded-[2rem] p-6 flex flex-col justify-between aspect-[1.7/1] group cursor-pointer">
       <div class="w-12 h-12 bg-indigo-900 rounded-2xl flex items-center justify-center shadow-md"><i class="fa-solid fa-graduation-cap text-yellow-400 text-xl"></i></div>
       <div class="mt-4">
@@ -104,7 +99,6 @@
       <button onclick="bukaModalMadrasah()" class="text-xs font-black text-indigo-950 group-hover:text-blue-700 flex items-center gap-2 uppercase tracking-widest mt-4 text-left cursor-pointer">BUKA ALAT <i class="fa-solid fa-circle-arrow-right"></i></button>
     </div>
 
-    <!-- CARD 3: SCAN WAJAH AI KIOSK -->
     <div id="box-kiosk" class="royal-card rounded-[2rem] p-6 flex flex-col justify-between aspect-[1.7/1] group cursor-pointer">
       <div class="w-12 h-12 bg-yellow-400 rounded-2xl flex items-center justify-center shadow-md"><i class="fa-solid fa-face-viewfinder text-indigo-900 text-xl"></i></div>
       <div class="mt-4">
@@ -114,7 +108,6 @@
       <a href="scan-wajah.html" class="text-xs font-black text-yellow-400 group-hover:text-white flex items-center gap-2 uppercase tracking-widest mt-4">BUKA ALAT <i class="fa-solid fa-circle-arrow-right animate-pulse"></i></a>
     </div>
 
-    <!-- CARD 4: PERIZINAN SANTRI -->
     <div id="box-perizinan" class="gold-card rounded-[2rem] p-6 flex flex-col justify-between aspect-[1.7/1] group cursor-pointer">
       <div class="w-12 h-12 bg-indigo-900 rounded-2xl flex items-center justify-center shadow-md"><i class="fa-solid fa-id-card-clip text-yellow-400 text-xl"></i></div>
       <div class="mt-4">
@@ -124,7 +117,6 @@
       <button onclick="bukaModalPerizinan()" class="text-xs font-black text-indigo-950 group-hover:text-blue-700 flex items-center gap-2 uppercase tracking-widest mt-4 text-left cursor-pointer">BUKA ALAT <i class="fa-solid fa-circle-arrow-right"></i></button>
     </div>
 
-    <!-- CARD 5: CATAT PELANGGARAN TA'ZIR -->
     <div id="box-tazir" class="royal-card rounded-[2rem] p-6 flex flex-col justify-between aspect-[1.7/1] group cursor-pointer">
       <div class="w-12 h-12 bg-yellow-400 rounded-2xl flex items-center justify-center shadow-md"><i class="fa-solid fa-gavel text-indigo-900 text-xl"></i></div>
       <div class="mt-4">
@@ -135,9 +127,6 @@
     </div>
   </main>
 
-  <!-- ========================================================================= -->
-  <!-- MODUL 1: ABSENSI KELAS MADRASAH CERAH -->
-  <!-- ========================================================================= -->
   <div id="modal-madrasah" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden">
     <div class="bright-modal w-full max-w-2xl rounded-3xl p-6 flex flex-col max-h-[85vh]">
       <div class="flex justify-between items-center mb-4 border-b-2 border-indigo-100 pb-3">
@@ -162,9 +151,6 @@
     </div>
   </div>
 
-  <!-- ========================================================================= -->
-  <!-- MODUL 2: PERIZINAN SANTRI -->
-  <!-- ========================================================================= -->
   <div id="modal-perizinan" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden">
     <div class="bright-modal w-full max-w-md rounded-3xl p-6">
       <div class="flex justify-between items-center mb-4 border-b-2 border-indigo-100 pb-3">
@@ -193,9 +179,6 @@
     </div>
   </div>
 
-  <!-- ========================================================================= -->
-  <!-- MODUL 3: CATAT PELANGGARAN TA'ZIR -->
-  <!-- ========================================================================= -->
   <div id="modal-tazir" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden">
     <div class="bright-modal w-full max-w-md rounded-3xl p-6">
       <div class="flex justify-between items-center mb-4 border-b-2 border-indigo-100 pb-3">
@@ -216,9 +199,6 @@
     </div>
   </div>
 
-  <!-- ========================================================================= -->
-  <!-- MODUL NEW 4: CRUD CORE & MANAGEMENT JADWAL PIKET (EXCLUSIVE ADDITION) -->
-  <!-- ========================================================================= -->
   <div id="modal-master-data" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden">
     <div class="bright-modal w-full max-w-xl rounded-3xl p-6 overflow-y-auto max-h-[90vh]">
       <div class="flex justify-between items-center mb-4 border-b-2 border-indigo-100 pb-2">
@@ -226,7 +206,6 @@
         <button onclick="tutupModal('modal-master-data')" class="text-red-600 hover:text-red-800 text-xs font-black uppercase tracking-widest cursor-pointer">Tutup <i class="fa-solid fa-xmark"></i></button>
       </div>
       
-      <!-- SUB FORM 1: ENTRI SANTRI BARU -->
       <div class="mb-6 p-4 bg-slate-50 border border-slate-300 rounded-2xl">
         <h4 class="text-xs font-black text-indigo-950 uppercase tracking-wide mb-2 border-b pb-1"><i class="fa-solid fa-user-plus text-emerald-600"></i> Daftarkan Santri Baru</h4>
         <form id="form-tambah-santri" class="space-y-2">
@@ -242,7 +221,6 @@
         </form>
       </div>
 
-      <!-- SUB FORM 2: PLOT JADWAL PIKET -->
       <div class="p-4 bg-slate-50 border border-slate-300 rounded-2xl">
         <h4 class="text-xs font-black text-indigo-950 uppercase tracking-wide mb-2 border-b pb-1"><i class="fa-solid fa-calendar-day text-amber-500"></i> Plot Jadwal Tugas Piket Harian</h4>
         <form id="form-tambah-piket" class="space-y-2">
@@ -251,7 +229,7 @@
               <option value="Senin">Senin</option><option value="Selasa">Selasa</option><option value="Rabu">Rabu</option>
               <option value="Kamis">Kamis</option><option value="Jumat">Jumat</option><option value="Sabtu">Sabtu</option><option value="Minggu">Minggu</option>
             </select>
-            <select id="piket-nik" class="w-full bg-white border border-slate-400 rounded-lg p-2 text-xs font-bold outline-none"></select>
+            <select id="piket-nik" class="w-full bg-white border border-slate-400 rounded-lg p-2 text-xs font-bold outline-none"> </select>
           </div>
           <input type="text" id="piket-tugas" placeholder="Zonasi Tugas (Contoh: Kamar Mandi Barat / Masjid)..." class="w-full bg-white border border-slate-400 rounded-lg p-2 text-xs font-bold" required>
           <button type="submit" class="w-full bg-indigo-900 text-white py-2 rounded-lg font-black text-xs uppercase tracking-wider cursor-pointer">Simpan Jadwal Plot</button>
@@ -260,7 +238,6 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer class="w-full text-center py-4 text-[10px] text-indigo-900 font-extrabold tracking-widest uppercase border-t-2 border-indigo-100 bg-white no-print">
     E-PESANTREN BRIGHT GOLD ECOSYSTEM ENGINE ver 5.0 (STABLE INTEGRATED)
   </footer>
@@ -307,9 +284,17 @@
       }
     }
 
+    // PERBAIKAN CORS UTAMA: Menggunakan POST dan URLSearchParams
     async function preloadDaftarSantri() {
       try {
-        let res = await fetch(`${API_URL}?aksi=ambil_database`, { method: "GET" });
+        let fd = new URLSearchParams();
+        fd.append('aksi', 'ambil_database');
+
+        let res = await fetch(API_URL, { 
+          method: "POST", 
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: fd.toString() 
+        });
         let r = await res.json();
         if(r.status === "success") {
           masterSantriLokal = r.data;
@@ -324,12 +309,19 @@
       } catch(e){ console.error("Error Preload:", e); }
     }
 
+    // PERBAIKAN CORS: Menggunakan POST dan URLSearchParams
     async function jalankanLiveMonitorDashboard() {
       try {
-        let res = await fetch(`${API_URL}?aksi=ambil_rekap_dashboard`, { method: "GET" });
+        let fd = new URLSearchParams();
+        fd.append('aksi', 'ambil_rekap_dashboard');
+
+        let res = await fetch(API_URL, { 
+          method: "POST", 
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: fd.toString() 
+        });
         let r = await res.json();
         if(r.status === "success") {
-          // Render Log Izin
           let hIzin = "";
           if(r.izin.length === 0) hIzin = "Belum ada riwayat perizinan aktif.";
           r.izin.forEach(i => {
@@ -337,7 +329,6 @@
           });
           document.getElementById('rekap-izin-log').innerHTML = hIzin;
 
-          // Render Log Ta'zir
           let hTazir = "";
           if(r.tazir.length === 0) hTazir = "Bersih! Tidak ada pelanggaran kedisiplinan hari ini.";
           r.tazir.forEach(t => {
@@ -354,6 +345,7 @@
     function bukaModalData() { document.getElementById('modal-master-data').classList.remove('hidden'); }
     function tutupModal(id) { document.getElementById(id).classList.add('hidden'); }
 
+    // PERBAIKAN CORS: Menggunakan POST dan URLSearchParams
     async function tarikDataSantriMadrasah() {
       const kls = document.getElementById('m-kelas').value;
       const jm = document.getElementById('m-jam').value;
@@ -363,7 +355,16 @@
       ldr.classList.remove('hidden');
       
       try {
-        let res = await fetch(`${API_URL}?aksi=ambil_list_madrasah&kelas=${kls}&jamKe=${jm}`, { method: "GET" });
+        let fd = new URLSearchParams();
+        fd.append('aksi', 'ambil_list_madrasah');
+        fd.append('kelas', kls);
+        fd.append('jamKe', jm);
+
+        let res = await fetch(API_URL, { 
+          method: "POST", 
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: fd.toString() 
+        });
         let r = await res.json();
         ldr.classList.add('hidden');
         if(r.status === "success" && r.data.length > 0) {
@@ -376,7 +377,7 @@
             bks.appendChild(btn);
           });
         } else {
-          bks.innerHTML = '<div class="col-span-3 text-center text-xs text-indigo-900 font-black py-6 uppercase tracking-wider">Luar Biasa! Semua santri di kelas ini sudah diabsen!</div>';
+          bks.innerHTML = '<div class="col-span-3 text-center text-xs text-indigo-900 font-black py-6 uppercase tracking-wider">Semua santri di kelas ini sudah diabsen!</div>';
         }
       } catch(e) {
         ldr.classList.add('hidden');
@@ -413,7 +414,6 @@
       }
     }
 
-    // LISTENER SUBMIT FORM PERIZINAN
     document.getElementById('form-izin').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('btn-izin');
@@ -439,7 +439,6 @@
       btn.disabled = false; btn.innerText = "VALIDASI & COBLOS IZIN";
     });
 
-    // LISTENER SUBMIT FORM TA'ZIR
     document.getElementById('form-tazir').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('btn-tazir');
@@ -464,7 +463,6 @@
       btn.disabled = false; btn.innerText = "KETOK PALU HUKUMAN";
     });
 
-    // LISTENER FORM INJECT SANTRI BARU (CRUD)
     document.getElementById('form-tambah-santri').addEventListener('submit', async (e) => {
       e.preventDefault();
       let fd = new URLSearchParams();
@@ -483,7 +481,6 @@
       } catch(x){ alert("Gagal koneksi cloud!"); }
     });
 
-    // LISTENER FORM PLOT PIKET (CRUD)
     document.getElementById('form-tambah-piket').addEventListener('submit', async (e) => {
       e.preventDefault();
       let fd = new URLSearchParams();
