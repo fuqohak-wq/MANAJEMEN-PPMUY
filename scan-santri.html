@@ -89,7 +89,11 @@
                 await faceapi.nets.faceLandmark68Net.loadFromUri('https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights');
                 
                 const fp = new URLSearchParams(); fp.append('aksi', 'ambil_database');
-                const res = await fetch(API_URL, { method: "POST", body: fp.toString() });
+                const res = await fetch(API_URL, { 
+                    method: "POST", 
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: fp.toString() 
+                });
                 const json = await res.json();
                 
                 if (json.status === "success") {
@@ -135,7 +139,11 @@
                 fp.append('kegiatan', kegiatan);
 
                 try {
-                    let res = await fetch(API_URL, { method: "POST", body: fp.toString() });
+                    let res = await fetch(API_URL, { 
+                        method: "POST", 
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: fp.toString() 
+                    });
                     let r = await res.json();
                     
                     if(r.status === "success") {
