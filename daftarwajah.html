@@ -25,7 +25,7 @@
             </div>
             
             <div id="dropdown-hasil" class="absolute left-0 right-0 mt-1 bg-slate-900 border border-slate-700 rounded-xl max-h-48 overflow-y-auto hidden z-50 shadow-2xl">
-                </div>
+            </div>
         </div>
 
         <input type="hidden" id="input-nik-terpilih">
@@ -170,7 +170,7 @@
         });
 
         // =========================================================================
-        // EKSEKUSI DATA PENDAFTARAN WAJAH KE GOOGLE SHEET
+        // PERBAIKAN UTAMA: PENGIRIMAN DATA MENGGUNAKAN RAW JSON OBJECT MURNI
         // =========================================================================
         btnSimpan.addEventListener('click', async () => {
             let nikFinal = document.getElementById('input-nik-terpilih').value;
@@ -188,26 +188,34 @@
             btnSimpan.disabled = true;
             btnSimpan.innerText = "MENYIMPAN TITIK WAJAH KE GOOGLE SHEET...";
 
-            const params = new URLSearchParams();
-            params.append('aksi', 'daftar_wajah_saja');
-            params.append('nik', nikFinal);
-            params.append('vektorWajah', JSON.stringify(posisiWajahTerakhir));
+            // Membungkus data ke bentuk JSON Objek agar terbaca sempurna oleh e.postData.contents di Backend
+            const payloadData = {
+                aksi: "daftar_wajah_saja",
+                nik: nikFinal,
+                vektorWajah: JSON.stringify(posisiWajahTerakhir)
+            };
 
             try {
                 let res = await fetch(API_URL, {
                     method: "POST",
-                    body: params.toString()
+                    headers: {
+                        "Content-Type": "text/plain;charset=utf-8" // Menghindari CORS pre-flight trigger
+                    },
+                    body: JSON.stringify(payloadData)
                 });
-                let r = await res.json();
+                
+                let textResponse = await res.text();
+                let r = JSON.parse(textResponse);
 
-                if (r.status === "success") {
+                if (r.status === "success" || r.status === "OK") {
                     tampilkanPopUp(`✅ BERHASIL MENGAKTIFKAN!\nWajah asli ${namaFinal} telah dikunci ke Google Sheet.`, "bg-emerald-500 text-slate-950 border-emerald-400");
                     
+                    // Reset Form
                     document.getElementById('input-nik-terpilih').value = "";
                     inputCari.value = "";
                     document.getElementById('info-santri-terpilih').classList.add('hidden');
                 } else {
-                    tampilkanPopUp(`❌ GAGAL: ${r.message}`, "bg-red-500 text-white border-red-400");
+                    tampilkanPopUp(`❌ GAGAL: ${r.message || 'Respons server tidak valid'}`, "bg-red-500 text-white border-red-400");
                 }
             } catch (err) {
                 tampilkanPopUp("Gangguan koneksi internet! Gagal menembak awan cloud Google Sheet.", "bg-red-500 text-white border-red-400");
