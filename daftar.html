@@ -2,20 +2,21 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Pendaftaran Wajah Santri</title>
+    <title>Pendaftaran Wajah AI Lokal</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col items-center justify-center p-4">
 
     <div class="max-w-sm w-full bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-2xl text-center">
-        <h1 class="text-sm font-black text-indigo-400 uppercase tracking-wider mb-1"><i class="fa-solid fa-user-plus mr-1"></i> Registrasi Kunci Wajah</h1>
-        <p class="text-[10px] text-slate-400 mb-4">Pastikan wajah menghadap lampu terang saat memotret</p>
+        <h1 class="text-sm font-black text-indigo-400 uppercase tracking-wider mb-1"><i class="fa-solid fa-user-plus mr-1"></i> Pendaftaran Wajah Lokal</h1>
+        <p id="info-engine" class="text-[10px] text-amber-400 font-bold animate-pulse mb-4">Mengunduh Engine AI Perangkat...</p>
 
         <div class="space-y-2 mb-4 text-left">
             <div>
-                <label class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Nomor Induk / NIK</label>
-                <input type="number" id="reg-nik" placeholder="Contoh: 2024001" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-indigo-500">
+                <label class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">NIK / Nomor Induk</label>
+                <input type="number" id="reg-nik" placeholder="Contoh: 2026001" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-indigo-500">
             </div>
             <div>
                 <label class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Nama Lengkap</label>
@@ -23,20 +24,20 @@
             </div>
         </div>
 
-        <div class="relative w-full aspect-square bg-black rounded-2xl overflow-hidden border border-slate-800 mb-4">
+        <div class="relative w-full aspect-square bg-black rounded-2xl overflow-hidden border border-slate-800 mb-4 flex items-center justify-center">
             <video id="video-daftar" autoplay playsinline class="w-full h-full object-cover scale-x-[-1]"></video>
-            <canvas id="canvas-daftar" class="hidden"></canvas>
+            <div id="kotak-panduan" class="absolute w-44 h-44 border-4 border-dashed border-indigo-500/30 rounded-full pointer-events-none"></div>
             <div id="flash" class="absolute inset-0 bg-white opacity-0 transition-opacity duration-100 pointer-events-none"></div>
         </div>
 
-        <button id="btn-jepret" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider shadow-lg transition-colors cursor-pointer">
-            <i class="fa-solid fa-camera mr-1"></i> Ambil & Kunci Wajah
+        <button id="btn-jepret" disabled class="w-full bg-slate-800 text-slate-500 font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider shadow-lg cursor-not-allowed">
+            Menyiapkan Kamera...
         </button>
 
         <p id="status-reg" class="text-[10px] mt-3 text-slate-400 font-medium"></p>
         
         <div class="mt-4 pt-3 border-t border-slate-800 text-center">
-            <a href="index.html" class="text-[10px] font-bold text-emerald-400 hover:underline">&larr; Kembali ke Mesin Absensi</a>
+            <a href="index.html" class="text-[10px] font-bold text-cyan-400 hover:underline">&larr; Masuk ke Menu Absensi Kiosk</a>
         </div>
     </div>
 
@@ -45,13 +46,37 @@
         let video = document.getElementById('video-daftar');
         let statusReg = document.getElementById('status-reg');
         let btnJepret = document.getElementById('btn-jepret');
+        let infoEngine = document.getElementById('info-engine');
+        let kotakPanduan = document.getElementById('kotak-panduan');
 
         window.addEventListener('DOMContentLoaded', async () => {
             try {
+                // Memuat 2 model AI esensial langsung ke browser HP
+                await faceapi.nets.tinyFaceDetector.loadFromUri('https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights');
+                await faceapi.nets.faceLandmark68Net.loadFromUri('https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights');
+                
+                infoEngine.innerText = "Engine AI Siap Terinstal di HP Anda";
+                infoEngine.className = "text-[10px] text-emerald-400 font-bold mb-4";
+
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
                 video.srcObject = stream;
+                
+                btnJepret.disabled = false;
+                btnJepret.innerText = "Kunci & Daftarkan Wajah";
+                btnJepret.className = "w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider shadow-lg cursor-pointer";
+                
+                // Cek deteksi wajah berkala untuk feedback visual kotak panduan
+                setInterval(async () => {
+                    const deteksi = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 128, scoreThreshold: 0.5 }));
+                    if(deteksi) {
+                        kotakPanduan.className = "absolute w-44 h-44 border-4 border-solid border-emerald-400 rounded-full pointer-events-none bg-emerald-500/5";
+                    } else {
+                        kotakPanduan.className = "absolute w-44 h-44 border-4 border-dashed border-indigo-500/30 rounded-full pointer-events-none";
+                    }
+                }, 400);
+
             } catch (e) {
-                statusReg.innerText = "Kamera tidak bisa diakses.";
+                statusReg.innerText = "Gagal memuat kamera/engine AI lokal.";
                 statusReg.className = "text-[10px] mt-3 text-red-400 font-bold";
             }
         });
@@ -61,32 +86,38 @@
             let nama = document.getElementById('reg-nama').value.trim();
 
             if (!nik || !nama) {
-                alert("Mohon isi NIK dan Nama terlebih dahulu!");
+                alert("NIK dan Nama tidak boleh kosong!");
                 return;
             }
 
             btnJepret.disabled = true;
-            statusReg.innerText = "Sedang mendaftarkan wajah ke Cloud...";
+            statusReg.innerText = "AI sedang membaca struktur titik wajah Anda...";
             statusReg.className = "text-[10px] mt-3 text-amber-400 font-bold animate-pulse";
 
+            // Efek kilatan kamera
             const f = document.getElementById('flash'); f.classList.remove('opacity-0'); f.classList.add('opacity-100');
             setTimeout(() => { f.classList.remove('opacity-100'); f.classList.add('opacity-0'); }, 80);
 
-            const canvas = document.getElementById('canvas-daftar');
-            
-            // RESOLUSI STABIL Ringan (320x240)
-            canvas.width = 320; 
-            canvas.height = 240;
-            canvas.getContext('2d').drawImage(video, 0, 0, 320, 240);
-            
-            // Kompresi dioptimasi ke 30% (0.3) agar payload data teks sangat aman di Google
-            const base64Image = canvas.toDataURL('image/jpeg', 0.3).split(',')[1];
+            // Deteksi titik koordinat wajah secara mendalam (Landmarks)
+            const hasilAI = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 128, scoreThreshold: 0.5 })).withFaceLandmarks();
 
+            if (!hasilAI) {
+                statusReg.innerText = "Gagal Mengunci! Posisikan wajah tepat di tengah kamera.";
+                statusReg.className = "text-[10px] mt-3 text-red-400 font-bold";
+                btnJepret.disabled = false;
+                return;
+            }
+
+            // Mengubah koordinat landmarks wajah menjadi string array teks mentah murni untuk ditaruh di Sheet
+            const stringKoordinatWajah = JSON.stringify(hasilAI.landmarks.positions);
+
+            statusReg.innerText = "Mengirim data kunci wajah ke Google Sheets...";
+            
             const formPayload = new URLSearchParams();
             formPayload.append('aksi', 'daftar');
             formPayload.append('nik', nik);
             formPayload.append('nama', nama);
-            formPayload.append('imageBlob', base64Image);
+            formPayload.append('vektorWajah', stringKoordinatWajah);
 
             try {
                 const res = await fetch(API_URL, {
@@ -102,11 +133,11 @@
                     document.getElementById('reg-nik').value = "";
                     document.getElementById('reg-nama').value = "";
                 } else {
-                    statusReg.innerText = r.message || "Gagal mendaftar.";
+                    statusReg.innerText = r.message;
                     statusReg.className = "text-[10px] mt-3 text-red-400 font-bold";
                 }
             } catch (e) {
-                statusReg.innerText = "Server Google Menolak Akses / Terjadi Error.";
+                statusReg.innerText = "Terjadi gangguan jaringan internet.";
                 statusReg.className = "text-[10px] mt-3 text-red-400 font-bold";
             } finally {
                 btnJepret.disabled = false;
