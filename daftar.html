@@ -3,114 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Registrasi Geometri Kelas Terintegrasi</title>
+    <title>Registrasi Wajah Santri</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>body { touch-action: manipulation; }</style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between p-4">
 
-    <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-2xl text-center space-y-4">
+    <div class="w-full max-w-md mx-auto bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col gap-3 shadow-lg">
+        <h1 class="text-xs font-black text-amber-400 uppercase tracking-wider"><i class="fa-solid fa-user-plus mr-1"></i> AKTIVASI WAJAH ASLI (DATA TALLY)</h1>
+        
         <div>
-            <h1 class="text-base font-black text-indigo-400 uppercase tracking-wider"><i class="fa-solid fa-user-plus mr-1"></i> REGISTRASI ANGGOTA</h1>
-            <p id="info-engine" class="text-[11px] text-amber-400 font-bold animate-pulse">Mengunduh Engine AI...</p>
+            <label class="text-[10px] font-black text-slate-400 tracking-widest block uppercase mb-1">Masukkan NIK Santri (Sesuai Tally):</label>
+            <input type="number" id="input-nik" placeholder="Contoh: 240015" class="w-full bg-slate-950 border-2 border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white outline-none focus:border-amber-500">
         </div>
+    </div>
 
-        <div class="space-y-3 text-left">
-            <input type="number" id="reg-nik" placeholder="Masukkan Nomor Induk / NIK" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs font-bold outline-none focus:border-indigo-500">
-            <input type="text" id="reg-nama" placeholder="Masukkan Nama Lengkap" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs font-bold outline-none focus:border-indigo-500">
-            
-            <div class="grid grid-cols-2 gap-2">
-                <select id="reg-status" onchange="toggleInputKelas()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-3 text-xs font-bold text-slate-300 outline-none">
-                    <option value="SANTRI">SANTRI</option>
-                    <option value="USTADZ">USTADZ</option>
-                    <option value="GURU_PDF">GURU PDF</option>
-                </select>
-                
-                <input type="text" id="reg-kelas" placeholder="Kelas (Misal: 1A)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-3 text-xs font-bold outline-none focus:border-indigo-500">
+    <div class="w-full max-w-md mx-auto my-auto flex flex-col justify-center items-center">
+        <div class="relative w-full aspect-square bg-slate-900 border-2 border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+            <video id="video-daftar" autoplay playsinline class="w-full h-full object-cover scale-x-[-1]"></video>
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div id="kotak-frame" class="w-64 h-64 border-4 border-dashed border-amber-500/40 rounded-3xl flex items-center justify-center transition-all duration-300">
+                    <span id="txt-instruksi" class="text-xs bg-slate-950/90 text-amber-400 px-4 py-2 rounded-xl font-black uppercase tracking-widest border border-amber-500/30 shadow-2xl">Memuat Engine AI...</span>
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="relative w-full aspect-square bg-black rounded-3xl overflow-hidden border border-slate-800 flex items-center justify-center">
-            <video id="video-daftar" autoplay playsinline class="w-full h-full object-cover scale-x-[-1]"></video>
-            <div id="kotak-panduan" class="absolute w-52 h-52 border-4 border-dashed border-indigo-500/30 rounded-full pointer-events-none"></div>
-            <div id="flash" class="absolute inset-0 bg-white opacity-0 transition-opacity duration-100 pointer-events-none"></div>
-        </div>
+    <div class="w-full max-w-md mx-auto space-y-2">
+        <button id="btn-simpan" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-4 rounded-2xl text-xs uppercase text-center tracking-widest shadow-lg transition-all"><i class="fa-solid fa-id-card-clip mr-1"></i> KUNCI & SIMPAN WAJAH ASLI</button>
+        <a href="index.html" class="w-full bg-slate-900 text-slate-400 font-bold py-3 rounded-2xl text-xs uppercase text-center block tracking-wider">Kembali</a>
+    </div>
 
-        <button id="btn-jepret" disabled class="w-full bg-slate-800 text-slate-500 font-black py-4 rounded-2xl text-xs uppercase tracking-widest cursor-not-allowed transition-all active:scale-95">
-            Menyiapkan Kamera...
-        </button>
-        <p id="status-reg" class="text-xs text-slate-400 font-bold min-h-[16px]"></p>
-        
-        <div class="pt-2 border-t border-slate-800 text-center">
-            <a href="index.html" class="text-xs font-black text-cyan-400 hover:underline"><i class="fa-solid fa-arrow-left mr-1"></i> KEMBALI UTAMA</a>
+    <div id="pop-notif" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-6 hidden z-50">
+        <div id="box-notif" class="w-full max-w-sm p-6 rounded-3xl text-center shadow-2xl border-2">
+            <span class="font-black text-sm block mt-1" id="txt-notif-msg">Status Pesan</span>
         </div>
     </div>
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbwR-Ml0M6mCXj2yc_E0Ihll3V3HIDlithCuMYvIsxSrtZdhVDJNMFZ5WKb657o8di5x/exec";
         let video = document.getElementById('video-daftar');
-        let statusReg = document.getElementById('status-reg');
-        let btnJepret = document.getElementById('btn-jepret');
-        let infoEngine = document.getElementById('info-engine');
-        let kotakPanduan = document.getElementById('kotak-panduan');
-
-        function toggleInputKelas() {
-            let st = document.getElementById('reg-status').value;
-            let inp = document.getElementById('reg-kelas');
-            if(st === "SANTRI") { inp.disabled = false; inp.placeholder = "Kelas (Misal: 1A)"; } 
-            else { inp.disabled = true; inp.value = "-"; }
-        }
+        let label = document.getElementById('txt-instruksi');
+        let frame = document.getElementById('kotak-frame');
+        let btnSimpan = document.getElementById('btn-simpan');
+        
+        let aiReady = false;
+        let posisiWajahTerakhir = null;
 
         window.addEventListener('DOMContentLoaded', async () => {
             try {
-                await faceapi.nets.tinyFaceDetector.loadFromUri('https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights');
-                await faceapi.nets.faceLandmark68Net.loadFromUri('https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights');
-                infoEngine.innerText = "🟢 Engine AI Siap"; infoEngine.className = "text-[11px] text-emerald-400 font-bold";
+                // Load model kecerdasan buatan dari CDN Publik unpkg (Anti-Blokir)
+                await faceapi.nets.tinyFaceDetector.loadFromUri('https://unpkg.com/@vladmandic/face-api/model');
+                await faceapi.nets.faceLandmark68Net.loadFromUri('https://unpkg.com/@vladmandic/face-api/model');
+                
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
                 video.srcObject = stream;
-                btnJepret.disabled = false; btnJepret.innerText = "KUNCI ANGGOTA BARU";
-                btnJepret.className = "w-full bg-indigo-600 text-white font-black py-4 rounded-2xl text-xs uppercase tracking-widest shadow-xl";
+                label.innerText = "SISTEM SIAP";
+                aiReady = true;
                 
+                // Mulai tracking deteksi wajah real-time
                 setInterval(async () => {
-                    const deteksi = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 128, scoreThreshold: 0.5 }));
-                    kotakPanduan.className = deteksi ? "absolute w-52 h-52 border-4 border-solid border-emerald-400 rounded-full bg-emerald-500/5 animate-pulse" : "absolute w-52 h-52 border-4 border-dashed border-indigo-500/30 rounded-full";
-                }, 400);
-            } catch (e) { statusReg.innerText = "Gagal memuat kamera."; }
+                    if (!aiReady || video.paused || video.ended) return;
+                    const deteksi = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 128, scoreThreshold: 0.4 })).withFaceLandmarks();
+                    if (deteksi) {
+                        posisiWajahTerakhir = deteksi.landmarks.positions;
+                        frame.className = "w-64 h-64 border-4 border-solid border-emerald-400 rounded-3xl flex items-center justify-center bg-emerald-500/10";
+                        label.innerText = "WAJAH TERKUNCI";
+                        label.className = "text-xs bg-slate-950/90 text-emerald-400 px-4 py-2 rounded-xl font-black uppercase tracking-widest border border-emerald-500/30";
+                    } else {
+                        posisiWajahTerakhir = null;
+                        frame.className = "w-64 h-64 border-4 border-dashed border-amber-500/40 rounded-3xl flex items-center justify-center transition-all duration-300";
+                        label.innerText = "DEPAN KAMERA CLOSE-UP";
+                        label.className = "text-xs bg-slate-950/90 text-amber-400 px-4 py-2 rounded-xl font-black uppercase tracking-widest border border-amber-500/30";
+                    }
+                }, 300);
+            } catch (e) {
+                label.innerText = "AI ENGINE CRASH";
+            }
         });
 
-        btnJepret.addEventListener('click', async () => {
-            let nik = document.getElementById('reg-nik').value.trim();
-            let nama = document.getElementById('reg-nama').value.trim();
-            let statusUser = document.getElementById('reg-status').value;
-            let kelas = document.getElementById('reg-kelas').value.trim() || "-";
+        btnSimpan.addEventListener('click', async () => {
+            let inputNik = document.getElementById('input-nik').value.trim();
+            
+            if (!inputNik) {
+                tampilkanPopUp("Masukkan NIK Santri Terlebih Dahulu!", "bg-amber-500 text-slate-950 border-amber-400");
+                return;
+            }
+            if (!posisiWajahTerakhir) {
+                tampilkanPopUp("Wajah tidak terdeteksi kamera! Dekatkan wajah ke tengah kotak.", "bg-red-500 text-white border-red-400");
+                return;
+            }
 
-            if (!nik || !nama) { alert("Mohon isi NIK dan Nama!"); return; }
-            btnJepret.disabled = true; statusReg.innerText = "Mengunci data...";
+            btnSimpan.disabled = true;
+            btnSimpan.innerText = "PROSES MENGIRIM DATA...";
 
-            const hasilAI = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 128, scoreThreshold: 0.5 })).withFaceLandmarks();
-            if (!hasilAI) { alert("Wajah tidak terbaca jelas!"); btnJepret.disabled = false; return; }
+            // Kirim koordinat wajah asli ke server untuk menimpa vektor tiruan
+            const params = new URLSearchParams();
+            params.append('aksi', 'daftar_wajah_saja');
+            params.append('nik', inputNik);
+            params.append('vektorWajah', JSON.stringify(posisiWajahTerakhir));
 
-            const fp = new URLSearchParams();
-            fp.append('aksi', 'daftar');
-            fp.append('nik', nik);
-            fp.append('nama', nama);
-            fp.append('statusUser', statusUser);
-            fp.append('kelas', kelas.toUpperCase());
-            fp.append('vektorWajah', JSON.stringify(hasilAI.landmarks.positions));
+            try {
+                let res = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: params.toString()
+                });
+                let r = await res.json();
 
-            const res = await fetch(API_URL, { 
-                method: "POST", 
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: fp.toString() 
-            });
-            const r = await res.json();
-            if (r.status === "success") {
-                statusReg.innerText = "🎉 Berhasil Didaftarkan!";
-                document.getElementById('reg-nik').value = ""; document.getElementById('reg-nama').value = "";
-            } else { statusReg.innerText = r.message; }
-            btnJepret.disabled = false;
+                if (r.status === "success") {
+                    tampilkanPopUp(`✅ BERHASIL!\nWajah asli NIK ${inputNik} sudah disimpan. Silakan lanjut ke santri berikutnya.`, "bg-emerald-500 text-slate-950 border-emerald-400");
+                    document.getElementById('input-nik').value = "";
+                } else {
+                    tampilkanPopUp(`❌ GAGAL: ${r.message}`, "bg-red-500 text-white border-red-400");
+                }
+            } catch (err) {
+                tampilkanPopUp("Terjadi gangguan koneksi internet ke Cloud Google Sheet!", "bg-red-500 text-white border-red-400");
+            } finally {
+                btnSimpan.disabled = false;
+                btnSimpan.innerText = "KUNCI & SIMPAN WAJAH ASLI";
+            }
         });
+
+        function tampilkanPopUp(pesan, temaClass) {
+            let pop = document.getElementById('pop-notif');
+            let box = document.getElementById('box-notif');
+            document.getElementById('txt-notif-msg').innerText = pesan;
+            box.className = `w-full max-w-sm p-6 rounded-3xl text-center shadow-2xl border-2 ${temaClass}`;
+            pop.classList.remove('hidden');
+            setTimeout(() => { pop.classList.add('hidden'); }, 4000);
+        }
     </script>
 </body>
 </html>
