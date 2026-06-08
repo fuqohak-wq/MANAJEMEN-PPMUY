@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kiosk Presensi Wajah Pesantren</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col items-center justify-center p-4">
 
@@ -23,7 +24,7 @@
         </div>
 
         <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 text-left">
-            <label class="text-[10px] font-black text-slate-500 tracking-widest block uppercase mb-1">Status Scanner:</label>
+            <label class="text-[10px] font-black text-slate-500 tracking-widest block uppercase mb-1">Status Kiosk:</label>
             <div id="log-absen" class="font-mono text-sm font-bold text-cyan-400 text-center py-2">
                 Menghubungkan jaringan cloud...
             </div>
@@ -41,23 +42,17 @@
         const logAbsen = document.getElementById('log-absen');
         const overlay = document.getElementById('loading-overlay');
         
-        let databaseSantri = [];
-        let indexAntrean = 0;
-        let sedangMemproses = false;
-
         window.addEventListener('DOMContentLoaded', async () => {
             try {
-                // Menembak GET ke jalur khusus doGet yang sudah lolos CORS
                 let res = await fetch(`${API_URL}?aksi=ambil_database`, { method: "GET" });
                 let json = await res.json();
                 
                 if (json.status === "success" && json.data.length > 0) {
-                    databaseSantri = json.data;
-                    infoStatus.innerText = `🟢 KIOSK ONLINE (DATABASE: ${databaseSantri.length} SANTRI)`;
+                    infoStatus.innerText = `🟢 KIOSK ONLINE (DATABASE: ${json.data.length} SANTRI)`;
                     infoStatus.className = "text-xs text-emerald-400 mt-1 font-bold tracking-wide";
                     startKamera();
                 } else {
-                    throw new Error("Data master di Google Sheet kosong!");
+                    throw new Error("Data master kosong.");
                 }
             } catch (e) {
                 infoStatus.innerText = "🔴 ERROR INTEGRASI: Gagal Tarik Data";
