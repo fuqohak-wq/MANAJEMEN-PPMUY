@@ -88,13 +88,26 @@
         await faceapi.nets.tinyFaceDetector.loadFromUri('https://unpkg.com/@vladmandic/face-api/model');
         await faceapi.nets.faceLandmark68Net.loadFromUri('https://unpkg.com/@vladmandic/face-api/model');
 
-        const res = await fetch(`${API_URL}?aksi=ambil_database`, { method: "GET" });
+        // SOLUSI UTAMA CORS: Menggunakan POST request lewat URLSearchParams
+        const dataForm = new URLSearchParams();
+        dataForm.append('aksi', 'ambil_database');
+
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: dataForm.toString()
+        });
+        
         const json = await res.json();
         if (json.status === "success") {
           databaseSantri = json.data;
           dbStatus.innerText = `🟢 ${databaseSantri.length} Santri Cloud Ready`;
           dbStatus.className = "text-[11px] text-emerald-400 font-bold";
+        } else {
+          dbStatus.innerText = "❌ Gagal Load DB Cloud";
+          dbStatus.className = "text-[11px] text-red-500 font-bold";
         }
+        
         const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
         video.srcObject = stream;
         label.innerText = "POSISIKAN WAJAH ANDA";
@@ -123,11 +136,12 @@
 
       for (let santri of databaseSantri) {
         try {
-          // Normalisasi pembacaan properti 'vektor' atau 'vektorWajah' dari Apps Script
+          // Mendukung properti 'vektor' atau 'vektorWajah' yang dilempar dari Apps Script
           let dataVektor = santri.vektor || santri.vektorWajah;
-          if(!dataVektor) continue;
+          if(!dataVektor || dataVektor.trim() === "") continue;
           
           let jarak = hitungJarakMatematika(posisiKamera, JSON.parse(dataVektor));
+          // Menggunakan toleransi kecocokan matematis 15.0
           if (jarak < skorTerbaik && jarak < 15.0) { 
             skorTerbaik = jarak; santriDitemukan = santri;
           }
