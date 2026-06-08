@@ -87,7 +87,7 @@
 
         window.addEventListener('DOMContentLoaded', async () => {
             try {
-                // Memuat struktur data geometri wajah dari CDN alternatif terpercaya unpkg
+                // Memuat struktur data geometri wajah dari CDN alternatif terpercaya unpkg (Bebas Blokir)
                 await faceapi.nets.tinyFaceDetector.loadFromUri('https://unpkg.com/@vladmandic/face-api/model');
                 await faceapi.nets.faceLandmark68Net.loadFromUri('https://unpkg.com/@vladmandic/face-api/model');
                 
@@ -105,7 +105,7 @@
                 label.innerText = "HADAPKAN WAJAH";
                 mulaiKioskScanLokal();
             } catch (e) { 
-                label.innerText = "🔴 ERROR INTEGRASI: Failed to fetch";
+                label.innerText = "🔴 ERROR FETCH";
                 dbStatus.innerText = "Gagal Ambil Data";
                 dbStatus.className = "text-[11px] text-red-500 font-bold";
                 console.error(e);
@@ -151,7 +151,7 @@
                 try {
                     let res = await fetch(API_URL, { 
                         method: "POST", 
-                        headers: { "Content-Type": "https://script.google.com/macros/s/AKfycbwR-Ml0M6mCXj2yc_E0Ihll3V3HIDlithCuMYvIsxSrtZdhVDJNMFZ5WKb657o8di5x/exec" },
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
                         body: fp.toString() 
                     });
                     let r = await res.json();
@@ -171,6 +171,7 @@
                 } catch(e) { 
                     isProcessing = false; 
                     label.innerText = "HADAPKAN WAJAH";
+                    kotakScan.className = "w-64 h-64 border-4 border-dashed border-cyan-500/40 rounded-3xl flex items-center justify-center transition-all duration-300";
                 }
             } else {
                 bunyiBeep(400);
