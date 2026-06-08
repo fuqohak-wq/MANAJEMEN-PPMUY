@@ -10,14 +10,14 @@
 
     <div class="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6 text-center">
         <div>
-            <h1 class="text-xl font-black text-emerald-400 uppercase tracking-wider">🟢 KIOSK PRESENSI WAJAH</h1>
-            <p id="info-status" class="text-xs text-amber-400 mt-1 animate-pulse font-bold">Sinkronisasi Database Google...</p>
+            <h1 class="text-xl font-black text-emerald-400 uppercase tracking-wider">🟢 KIOSK PRESENSI LIVE VERCEL</h1>
+            <p id="info-status" class="text-xs text-amber-400 mt-1 animate-pulse font-bold">Menghubungkan ke API Google...</p>
         </div>
 
         <div class="relative bg-black rounded-2xl overflow-hidden aspect-video w-full border border-slate-800 flex items-center justify-center">
             <video id="video-kamera" autoplay muted playsinline class="w-full h-full object-cover scale-x-[-1]"></video>
             <div id="loading-overlay" class="absolute inset-0 bg-slate-950/80 flex items-center justify-center text-xs font-bold tracking-widest text-slate-400 animate-pulse">
-                MENYIAPKAN LENSA...
+                MEMBUAT CAMERA ENGINE...
             </div>
             <div class="absolute inset-12 border-2 border-dashed border-emerald-500/30 rounded-2xl pointer-events-none animate-pulse"></div>
         </div>
@@ -25,7 +25,7 @@
         <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 text-left">
             <label class="text-[10px] font-black text-slate-500 tracking-widest block uppercase mb-1">Status Scanner:</label>
             <div id="log-absen" class="font-mono text-sm font-bold text-cyan-400 text-center py-2">
-                Menunggu Santri Berdiri di Depan Kiosk...
+                Menunggu Santri Berdiri di Depan Kamera...
             </div>
         </div>
     </div>
@@ -40,12 +40,13 @@
         const overlay = document.getElementById('loading-overlay');
         
         let databaseSantri = [];
-        let sedangMemproses = false;
         let indexAntrean = 0;
+        let sedangMemproses = false;
 
-        // 1. Ambil Data Santri yang Sudah Memiliki Vektor di Google Sheet
+        // 1. Ambil Data Database Santri secara Aman via API Web App
         window.addEventListener('DOMContentLoaded', async () => {
             try {
+                // Menembak aksi ambil_database yang ada di Code.gs Anda
                 let res = await fetch(`${API_URL}?aksi=ambil_database`);
                 let json = await res.json();
                 
@@ -55,33 +56,33 @@
                     infoStatus.className = "text-xs text-emerald-400 mt-1 font-bold tracking-wide";
                     startKamera();
                 } else {
-                    throw new Error("Respon database kosong");
+                    throw new Error("Database kosong atau respons server salah.");
                 }
             } catch (e) {
-                infoStatus.innerText = "🔴 INTEGRASI ERROR: Gagal Ambil Data";
+                infoStatus.innerText = "🔴 ERROR INTEGRASI: Gagal Tarik Data";
                 infoStatus.className = "text-xs text-red-500 mt-1 font-bold";
-                logAbsen.innerText = "Hubungan terputus. Pastikan Web App sudah di-Deploy New Version.";
+                logAbsen.innerText = "Gagal terhubung ke Google Sheet. Cek kembali URL Exec Anda.";
                 logAbsen.className = "text-red-500 font-bold text-center text-xs";
             }
         });
 
-        // 2. Akses Kamera Hardware Device
+        // 2. Hidupkan Kamera (Di Vercel / Lokal Dijamin Bisa Muncul)
         function startKamera() {
             navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
                 .then(stream => {
                     video.srcObject = stream;
                     overlay.classList.add('hidden');
-                    // Mesin pemindai memproses antrean absensi otomatis setiap 4 detik
-                    setInterval(prosesAbsenOtomatis, 4000);
+                    // Mesin scanner memproses absensi otomatis bergantian setiap 4 detik
+                    setInterval(prosesAbsenKiosk, 4000);
                 })
                 .catch(err => {
-                    overlay.innerText = "AKSES KAMERA DIBLOKIR BROWSER!";
-                    overlay.className = "absolute inset-0 bg-red-950/90 text-red-400 flex items-center justify-center text-xs font-bold";
+                    overlay.innerText = "AKSES KAMERA DITOLAK ATAU TIDAK DITEMUKAN!";
+                    overlay.className = "absolute inset-0 bg-red-950/90 text-red-400 flex items-center justify-center text-xs font-bold p-4";
                 });
         }
 
-        // 3. Logika Pemrosesan Scanner Masuk ke Sheet
-        async function prosesAbsenOtomatis() {
+        // 3. Eksekusi Tembak Data Absen ke Google Sheet
+        async function prosesAbsenKiosk() {
             if (sedangMemproses || databaseSantri.length === 0) return;
             sedangMemproses = true;
 
@@ -90,13 +91,12 @@
             logAbsen.className = "text-amber-400 font-bold text-center text-xs tracking-wide animate-pulse";
 
             try {
-                // Siapkan data payload sesuai parameter Backend Code.gs Anda
                 const payload = new URLSearchParams();
                 payload.append("aksi", "absen");
                 payload.append("nik", santriSaatIni.nik);
                 payload.append("nama", santriSaatIni.nama);
-                payload.append("kegiatan", "Jamaah Maghrib"); // 💡 Silakan ganti nama kegiatan di sini
-                payload.append("petugas", "KIOSK_UTAMA_PONDOK");
+                payload.append("kegiatan", "Jamaah Maghrib"); // Silakan ganti nama kegiatan di sini jika diperlukan
+                payload.append("petugas", "KIOSK_VERCEL_LIVE");
 
                 let kirim = await fetch(API_URL, {
                     method: "POST",
@@ -121,7 +121,7 @@
             // Geser antrean ke santri berikutnya secara otomatis
             indexAntrean = (indexAntrean + 1) % databaseSantri.length;
             
-            // Jeda penahanan scan 3 detik demi kenyamanan alur antre santri
+            // Jeda 3 detik agar sistem stabil sebelum memproses antrean berikutnya
             setTimeout(() => { sedangMemproses = false; }, 3000);
         }
     </script>
