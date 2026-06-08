@@ -7,13 +7,11 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Desain Latar Belakang Cerah Kombinasi Biru Langit, Putih Bersih, dan Pendaran Kuning */
         .bright-premium-bg {
             background: radial-gradient(circle at 0% 0%, rgba(253, 224, 71, 0.2) 0%, transparent 35%),
                         radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.15) 0%, transparent 40%),
                         #f8fafc;
         }
-        /* Kartu dengan Gradasi Biru Royal Mewah dan Border Kuning Emas yang Menyala */
         .royal-card {
             background: linear-gradient(135deg, #1e3a8a 0%, #0d9488 100%);
             border: 3px solid #facc15;
@@ -25,7 +23,6 @@
             box-shadow: 0 20px 30px -10px rgba(30, 58, 138, 0.35), 0 15px 20px -5px rgba(250, 204, 21, 0.4);
             border-color: #fde047;
         }
-        /* Kartu Khusus Variasi Kuning Emas Cerah dengan Tulisan Biru */
         .gold-card {
             background: linear-gradient(135deg, #facc15 0%, #eab308 100%);
             border: 3px solid #1e3a8a;
@@ -37,7 +34,6 @@
             box-shadow: 0 20px 30px -10px rgba(234, 179, 8, 0.5), 0 15px 20px -5px rgba(30, 58, 138, 0.2);
             border-color: #2563eb;
         }
-        /* Modal Pop-up Cerah Mewah */
         .bright-modal {
             background: #ffffff;
             border: 4px solid #1e3a8a;
@@ -78,7 +74,7 @@
             <a href="daftar-wajah.html" class="text-xs font-black text-yellow-400 group-hover:text-white flex items-center gap-2 uppercase tracking-widest mt-4">BUKA ALAT <i class="fa-solid fa-circle-arrow-right animate-pulse"></i></a>
         </div>
 
-        <!-- CARD 2: ABSENSI GURU PDF (INI YANG DIUBAH TOTAL UNTUK KIAI) -->
+        <!-- CARD 2: ABSENSI GURU PDF -->
         <div id="box-madrasah" class="gold-card rounded-[2rem] p-6 flex flex-col justify-between aspect-[1.7/1] group cursor-pointer">
             <div class="w-12 h-12 bg-indigo-900 rounded-2xl flex items-center justify-center shadow-md">
                 <i class="fa-solid fa-user-tie text-yellow-400 text-xl"></i>
@@ -128,9 +124,7 @@
 
     </main>
 
-    <!-- ========================================================================= -->
-    <!-- MODAL 1: ABSENSI GURU PDF (EDISI FIXED FILTER HARI, JAM, GENDER) -->
-    <!-- ========================================================================= -->
+    <!-- MODAL 1: ABSENSI GURU PDF -->
     <div id="modal-madrasah" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden">
         <div class="bright-modal w-full max-w-3xl rounded-3xl p-6 flex flex-col max-h-[85vh]">
             <div class="flex justify-between items-center mb-4 border-b-2 border-indigo-100 pb-3">
@@ -139,7 +133,6 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-                <!-- FILTER HARI -->
                 <select id="m-hari" class="bg-slate-50 border-2 border-indigo-900 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 cursor-pointer outline-none">
                     <option value="Sabtu">Hari Sabtu</option>
                     <option value="Minggu">Hari Minggu</option>
@@ -148,13 +141,11 @@
                     <option value="Rabu">Hari Rabu</option>
                     <option value="Kamis">Hari Kamis</option>
                 </select>
-                <!-- FILTER JAM -->
                 <select id="m-jam" class="bg-slate-50 border-2 border-indigo-900 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 cursor-pointer outline-none">
                     <option value="Jam ke I">Jam ke I</option>
                     <option value="Jam ke II">Jam ke II</option>
                     <option value="Jam ke III">Jam ke III</option>
                 </select>
-                <!-- FILTER GENDER -->
                 <select id="m-gender" class="bg-slate-50 border-2 border-indigo-900 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 cursor-pointer outline-none">
                     <option value="LAKI-LAKI">LAKI-LAKI (Ustadz)</option>
                     <option value="PEREMPUAN">PEREMPUAN (Ustadzah)</option>
@@ -167,9 +158,7 @@
         </div>
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- MODAL 2: PERIZINAN SANTRI (FUNGSI ASLI REKAP DATA SANTRI) -->
-    <!-- ========================================================================= -->
+    <!-- MODAL 2: PERIZINAN SANTRI -->
     <div id="modal-perizinan" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden">
         <div class="bright-modal w-full max-w-md rounded-3xl p-6">
             <div class="flex justify-between items-center mb-4 border-b-2 border-indigo-100 pb-3">
@@ -198,9 +187,7 @@
         </div>
     </div>
 
-    <!-- ========================================================================= -->
     <!-- MODAL 3: CATAT PELANGGARAN TA'ZIR SANTRI -->
-    <!-- ========================================================================= -->
     <div id="modal-tazir" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden">
         <div class="bright-modal w-full max-w-md rounded-3xl p-6">
             <div class="flex justify-between items-center mb-4 border-b-2 border-indigo-100 pb-3">
@@ -221,18 +208,15 @@
         </div>
     </div>
 
-    <!-- FOOTER LICENSE -->
     <footer class="w-full text-center py-4 text-[10px] text-indigo-900 font-extrabold tracking-widest uppercase border-t-2 border-indigo-100 bg-white">
         E-PESANTREN BRIGHT GOLD ECOSYSTEM ENGINE ver 4.9
     </footer>
 
     <script>
-        // MASUKKAN URL WEB APP APPS SCRIPT BARU HASIL GABUNGAN AMAN TADI DI SINI
         const API_URL = "https://script.google.com/macros/s/AKfycbwR-Ml0M6mCXj2yc_E0Ihll3V3HIDlithCuMYvIsxSrtZdhVDJNMFZ5WKb657o8di5x/exec";
         let masterSantriLokal = [];
 
         window.addEventListener('DOMContentLoaded', async () => {
-            // Simulasi Login jika lokal kosong, ganti sesuai sistem login asli
             const nama = localStorage.getItem('session_nama') || "KH. ZUHURUL FUQOHAK";
             const role = localStorage.getItem('session_role') || "KIAI";
             
@@ -242,10 +226,10 @@
             preloadDaftarSantriLama();
         });
 
-        // 1. FUNGSI AMAN LAMA: PRELOAD DATABASE SANTRI UNTUK MENU PERIZINAN & TA'ZIR
+        // 1. PENYEMPURNAAN FUNGSI AMBIL DATABASE (MENGGUNAKAN REDIRECT SEBAGAI BERKAS JSON AMAN)
         async function preloadDaftarSantriLama() {
             try {
-                let res = await fetch(`${API_URL}?aksi=ambil_database`);
+                let res = await fetch(`${API_URL}?aksi=ambil_database`, { method: "GET" });
                 let r = await res.json();
                 if(r.status === "success") {
                     masterSantriLokal = r.data;
@@ -264,7 +248,7 @@
         function bukaModalTazir() { document.getElementById('modal-tazir').classList.remove('hidden'); }
         function tutupModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-        // 2. FUNGSI BARU: TARIK DAFTAR GURU FORMAL BERDASARKAN FILTER KIAI
+        // 2. FUNGSI MUAT JADWAL GURU
         async function tarikDataGuruPDF() {
             const hari = document.getElementById('m-hari').value;
             const jam = document.getElementById('m-jam').value;
@@ -304,13 +288,13 @@
             } catch(e) { ldr.classList.add('hidden'); alert("Gagal menyambung ke Cloud Sheets!"); }
         }
 
-        // 3. FUNGSI BARU: KLIK NAMA GURU LANGSUNG HILANG & MASUK ABSENSI_SEKOLAH
+        // 3. FUNGSI ABSENSI GURU (NO-CORS)
         async function eksekusiKlikHilangGuru(idCard, nama, mapel, kelas, jam, gender) {
             const card = document.getElementById(`card-g-${idCard}`);
             card.style.opacity = "0.3";
             card.disabled = true;
 
-            let fd = new URLSearchParams();
+            let fd = new FormData();
             fd.append('aksi', 'simpan_absen_gurupdf');
             fd.append('namaGuru', nama);
             fd.append('mapel', mapel);
@@ -319,22 +303,23 @@
             fd.append('gender', gender);
 
             try {
-                let res = await fetch(API_URL, { method: "POST", body: fd.toString() });
-                let r = await res.json();
-                if(r.status === "success") {
-                    card.classList.add('scale-0');
-                    setTimeout(() => card.remove(), 250);
-                } else { card.style.opacity = "1"; card.disabled = false; }
-            } catch(e) { card.style.opacity = "1"; card.disabled = false; }
+                await fetch(API_URL, { method: "POST", mode: "no-cors", body: fd });
+                card.classList.add('scale-0');
+                setTimeout(() => card.remove(), 250);
+            } catch(e) { 
+                card.style.opacity = "1"; 
+                card.disabled = false; 
+                alert("Gagal mengirim absensi, periksa jaringan!");
+            }
         }
 
-        // 4. FUNGSI AMAN LAMA: FORM SUBMIT PERIZINAN SANTRI TO CLOUD
+        // 4. FUNGSI PERIZINAN (NO-CORS)
         document.getElementById('form-izin').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-izin');
             btn.disabled = true; btn.innerText = "PROSES VALIDASI...";
 
-            let fd = new URLSearchParams();
+            let fd = new FormData();
             fd.append('aksi', 'simpan_perizinan');
             fd.append('nik', document.getElementById('p-nik').value);
             fd.append('jenisIzin', document.getElementById('p-jenis').value);
@@ -344,22 +329,21 @@
             fd.append('petugas', localStorage.getItem('session_nama') || "KIAI");
 
             try {
-                let res = await fetch(API_URL, { method: "POST", body: fd.toString() });
-                let r = await res.json();
-                alert(r.message);
+                await fetch(API_URL, { method: "POST", mode: "no-cors", body: fd });
+                alert("Data perizinan sedang dikirim ke Sheets!");
                 tutupModal('modal-perizinan');
                 document.getElementById('form-izin').reset();
-            } catch(err) { alert("Server gagal merespon!"); }
+            } catch(err) { alert("Terjadi gangguan pengiriman!"); }
             btn.disabled = false; btn.innerText = "VALIDASI & COBLOS IZIN";
         });
 
-        // 5. FUNGSI AMAN LAMA: FORM SUBMIT TA'ZIR DISIPLIN SANTRI TO CLOUD
+        // 5. FUNGSI TA'ZIR (NO-CORS)
         document.getElementById('form-tazir').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-tazir');
             btn.disabled = true; btn.innerText = "MENYIMPAN DATA DISIPLIN...";
 
-            let fd = new URLSearchParams();
+            let fd = new FormData();
             fd.append('aksi', 'simpan_pelanggaran');
             fd.append('nik', document.getElementById('t-nik').value);
             fd.append('tingkat', document.getElementById('t-tingkat').value);
@@ -368,12 +352,11 @@
             fd.append('petugas', localStorage.getItem('session_nama') || "KIAI");
 
             try {
-                let res = await fetch(API_URL, { method: "POST", body: fd.toString() });
-                let r = await res.json();
-                alert(r.message);
+                await fetch(API_URL, { method: "POST", mode: "no-cors", body: fd });
+                alert("Keputusan Hukum Ta'zir sedang diproses ke Sheets!");
                 tutupModal('modal-tazir');
                 document.getElementById('form-tazir').reset();
-            } catch(err) { alert("Server gagal merespon!"); }
+            } catch(err) { alert("Terjadi gangguan pengiriman!"); }
             btn.disabled = false; btn.innerText = "KETOK PALU HUKUMAN";
         });
 
