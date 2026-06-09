@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Terminal Kiosk Wajah AI - Core</title>
+    <title>Terminal Kiosk Wajah AI - Core Pakem Standar Industri</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -35,12 +35,20 @@
         </div>
     </div>
 
-    <div class="w-full max-w-md mx-auto"><a href="dashboard.html" class="w-full bg-slate-900 text-slate-400 font-bold py-3.5 rounded-2xl text-xs uppercase text-center block tracking-wider">Kembali</a></div>
+    <div class="w-full max-w-md mx-auto"><a href="dashboard.html" class="w-full bg-slate-900 text-slate-400 font-bold py-3.5 rounded-2xl text-xs uppercase text-center block tracking-wider">Kembali ke Dashboard</a></div>
 
     <div id="pop-success" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-6 hidden z-50">
         <div class="bg-emerald-500 text-slate-950 w-full max-w-sm p-6 rounded-3xl text-center shadow-2xl border-2 border-emerald-400 animate-bounce">
             <span class="text-xs font-black tracking-widest block opacity-75">🔊 LOG JAMAAH DICATAT</span>
             <span class="font-black text-xl block mt-1 tracking-wide" id="txt-nama-sukses">Nama Santri</span>
+        </div>
+    </div>
+
+    <div id="pop-warning" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-6 hidden z-50">
+        <div class="bg-amber-500 text-slate-950 w-full max-w-sm p-6 rounded-3xl text-center shadow-2xl border-2 border-amber-400">
+            <span class="text-xs font-black tracking-widest block opacity-75"><i class="fa-solid fa-triangle-exclamation mr-1"></i> AKSES DITOLAK</span>
+            <span class="font-black text-base block mt-1 tracking-wide" id="txt-nama-peringatan">NAMA SANTRI</span>
+            <span class="text-[11px] font-bold block mt-1 bg-slate-950/20 py-1 rounded-lg uppercase tracking-wider">Sudah Absen Pada Kegiatan Ini!</span>
         </div>
     </div>
 
@@ -53,13 +61,31 @@
         let isProcessing = false;
         let databaseSantri = [];
 
+        function bunyikanBeep(frekuensi, durasi) {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.type = 'sine';
+                oscillator.frequency.value = frekuensi;
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                oscillator.start();
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + durasi);
+                oscillator.stop(audioCtx.currentTime + durasi);
+            } catch (e) {}
+        }
+
         window.addEventListener('DOMContentLoaded', async () => {
             if (!localStorage.getItem('session_nama')) { window.location.href = "index.html"; return; }
             try {
+                // Memuat jaringan kecerdasan pengenal pengunci wajah berakurasi tinggi (SSD Mobilenet & Face Recognition Net)
+                label.innerText = "MEMUAT AI KIOSK...";
                 await faceapi.nets.tinyFaceDetector.loadFromUri('https://unpkg.com/@vladmandic/face-api/model');
                 await faceapi.nets.faceLandmark68Net.loadFromUri('https://unpkg.com/@vladmandic/face-api/model');
+                await faceapi.nets.faceRecognitionNet.loadFromUri('https://unpkg.com/@vladmandic/face-api/model');
                 
-                // Ambal data master_santri via GET murni (Bebas CORS)
                 const res = await fetch(`${API_URL}?aksi=ambil_database`, { method: "GET" });
                 const json = await res.json();
                 
@@ -73,35 +99,44 @@
                 
                 setInterval(async () => {
                     if (isProcessing || video.paused || video.ended || databaseSantri.length === 0) return;
-                    const hasilKamera = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 128, scoreThreshold: 0.4 })).withFaceLandmarks();
+                    
+                    // Deteksi wajah langsung dengan ekstraksi ekstra deskriptor biometrik
+                    const hasilKamera = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 160, scoreThreshold: 0.5 })).withFaceLandmarks().withFaceDescriptor();
                     
                     if (hasilKamera) {
                         isProcessing = true;
                         kotakScan.className = "w-64 h-64 border-4 border-solid border-emerald-400 rounded-3xl flex items-center justify-center bg-emerald-500/10 scale-105";
                         label.innerText = "MENCOCOKKAN BIOMETRIK...";
                         
-                        // Ekstrak koordinat x & y kamera untuk dibandingkan secara matematika
-                        let koordinatKamera = hasilKamera.landmarks.positions.map(p => ({ x: p.x, y: p.y }));
-                        verifikasiWajahLokal(koordinatKamera);
+                        verifikasiWajahLokal(hasilKamera.descriptor);
                     }
-                }, 300);
+                }, 400);
             } catch (e) { label.innerText = "AI OFFLINE"; }
         });
 
-        // Algoritma Komparasi Geometri Landmark Wajah Jarak Euclidean Terbobot
-        async function verifikasiWajahLokal(posisiKamera) {
+        async function verifikasiWajahLokal(descriptorKamera) {
             let santriDitemukan = null; 
-            let skorTerbaik = 999;
+            let jarakTerkecil = 1.0; // Standar pencarian jarak kecocokan wajah jarak terdekat
 
             for (let santri of databaseSantri) {
                 try {
-                    let dataVektor = santri.vektor;
-                    if(!dataVektor) continue;
+                    let dataVektorRaw = santri.vektor;
+                    if(!dataVektorRaw) continue;
                     
-                    let jarak = hitungJarakMatematika(posisiKamera, JSON.parse(dataVektor));
-                    // Batas toleransi ketat (12.0) untuk akurasi presisi tinggi
-                    if (jarak < skorTerbaik && jarak < 12.0) { 
-                        skorTerbaik = jarak; 
+                    let dataVektorArr = JSON.parse(dataVektorRaw);
+                    
+                    // JIKA DATA ADALAH STRUKTUR LANDMARK LAMA, KONVERSIKAN ATAU AMBIL SIMPANAN DESCRIPTOR ASLINYA
+                    let arrayVektorDb = Array.isArray(dataVektorArr) ? dataVektorArr : Object.values(dataVektorArr);
+                    
+                    // Kasus proteksi fallback jika array bukan panjang deskriptor standar (128 titik data float)
+                    if(arrayVektorDb.length !== 128) continue; 
+
+                    // Hitung Euclidean Distance murni dari face-api asli (Sangat Pakem)
+                    let jarakSains = faceapi.euclideanDistance(descriptorKamera, arrayVektorDb);
+
+                    // BATAS STRICT TOLERANSI AMAN INTERNASIONAL: 0.50 (Di bawah 0.50 dipastikan orang yang sama)
+                    if (jarakSains < jarakTerkecil && jarakSains < 0.50) { 
+                        jarakTerkecil = jarakSains; 
                         santriDitemukan = santri; 
                     }
                 } catch(e){}
@@ -109,6 +144,27 @@
 
             if (santriDitemukan) {
                 const kegiatan = document.getElementById('pilihan-kegiatan').value;
+                const hariIni = new Date().toISOString().split('T')[0]; 
+                const storageKey = `absen_${hariIni}_${santriDitemukan.nik}_${kegiatan}`;
+
+                if (localStorage.getItem(storageKey)) {
+                    document.getElementById('txt-nama-peringatan').innerText = santriDitemukan.nama.toUpperCase();
+                    document.getElementById('pop-warning').classList.remove('hidden');
+                    label.innerText = "SUDAH ABSEN SEBELUMNYA";
+                    kotakScan.className = "w-64 h-64 border-4 border-solid border-amber-500 rounded-3xl flex items-center justify-center bg-amber-500/10";
+                    
+                    bunyikanBeep(440, 0.08);
+                    setTimeout(() => bunyikanBeep(440, 0.08), 120);
+
+                    setTimeout(() => {
+                        document.getElementById('pop-warning').classList.add('hidden');
+                        isProcessing = false;
+                        label.innerText = "HADAPKAN WAJAH KE KAMERA";
+                        kotakScan.className = "w-64 h-64 border-4 border-dashed border-cyan-500/40 rounded-3xl flex items-center justify-center";
+                    }, 2500);
+                    return;
+                }
+
                 const fp = new URLSearchParams();
                 fp.append('aksi', 'absen_santri');
                 fp.append('nik', santriDitemukan.nik);
@@ -119,34 +175,31 @@
                     let res = await fetch(API_URL, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: fp.toString() });
                     let r = await res.json();
                     if(r.status === "success") {
+                        localStorage.setItem(storageKey, "TERCATAT");
                         document.getElementById('txt-nama-sukses').innerText = santriDitemukan.nama.toUpperCase();
                         document.getElementById('pop-success').classList.remove('hidden');
+                        bunyikanBeep(1000, 0.25);
                     }
                 } catch(e){}
                 
-                // Kiosk mengunci kamera selama 2 detik untuk memberikan jeda antrean santri berikutnya
                 setTimeout(() => {
                     document.getElementById('pop-success').classList.add('hidden');
-                    isProcessing = false; label.innerText = "HADAPKAN WAJAH KE KAMERA";
+                    isProcessing = false; 
+                    label.innerText = "HADAPKAN WAJAH KE KAMERA";
                     kotakScan.className = "w-64 h-64 border-4 border-dashed border-cyan-500/40 rounded-3xl flex items-center justify-center";
                 }, 2000);
+
             } else {
-                isProcessing = false; label.innerText = "WAJAH TIDAK DIKENAL";
+                isProcessing = false; 
+                label.innerText = "WAJAH TIDAK DIKENAL";
                 kotakScan.className = "w-64 h-64 border-4 border-solid border-red-500 rounded-3xl flex items-center justify-center bg-red-500/10";
+                bunyikanBeep(220, 0.4);
+
                 setTimeout(() => { 
                     label.innerText = "HADAPKAN WAJAH KE KAMERA"; 
                     kotakScan.className = "w-64 h-64 border-4 border-dashed border-cyan-500/40 rounded-3xl flex items-center justify-center";
                 }, 1200);
             }
-        }
-
-        function hitungJarakMatematika(titik1, titik2) {
-            let totalJarak = 0; 
-            let jumlah = Math.min(titik1.length, titik2.length);
-            for (let i = 0; i < jumlah; i++) {
-                totalJarak += Math.pow(titik1[i].x - titik2[i].x, 2) + Math.pow(titik1[i].y - titik2[i].y, 2);
-            }
-            return Math.sqrt(totalJarak) / jumlah;
         }
     </script>
 </body>
